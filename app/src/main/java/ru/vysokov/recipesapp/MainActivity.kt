@@ -14,8 +14,10 @@ class MainActivity : AppCompatActivity() {
         get() = _binding ?: throw IllegalStateException()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
+
         enableEdgeToEdge()
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -23,5 +25,16 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        showCategoriesFragment()
+
+    }
+
+    private fun showCategoriesFragment() {
+        val fragment = CategoriesListFragment()
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainContainer, fragment)
+            .commit()
     }
 }
