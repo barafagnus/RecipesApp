@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_color"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -15,39 +15,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="@dimen/padding_16"
-        android:layout_marginVertical="@dimen/padding_8"
-        >
+        android:layout_marginVertical="@dimen/padding_8">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_categories"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_button"
+            android:backgroundTint="@color/primary_button_color"
             style="@style/StyleNavButton"
             android:text="@string/categories"
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/padding_4"/>
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_favorites"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/secondary_button"
+            android:backgroundTint="@color/secondary_button_color"
             style="@style/StyleNavButton"
             android:text="@string/favorites"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/padding_4"
             app:icon="@drawable/ic_heart_empty"
             app:iconGravity="end"
-
-
             />
-
     </LinearLayout>
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
