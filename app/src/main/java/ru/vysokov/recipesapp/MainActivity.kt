@@ -8,7 +8,6 @@ import androidx.core.view.WindowInsetsCompat
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private var _binding: ActivityMainBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
