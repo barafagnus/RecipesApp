@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#F4FAFF</color>
+    <color name="primary_button_color">#525DC0</color>
+    <color name="primary_button_pressed_color">#7079CC</color>
+    <color name="secondary_button_color">#E13E3E</color>
+    <color name="secondary_button_pressed_color">#E35B5B</color>
+    <color name="on_surface_color">#5F3678</color>
+    <color name="on_surface_variant_color">#666666</color>
+    <color name="on_primary_color">#FFFFFF</color>
 </resources>
