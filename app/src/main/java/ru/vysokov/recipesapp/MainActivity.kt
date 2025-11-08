@@ -37,4 +37,9 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.mainContainer, fragment)
             .commit()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
