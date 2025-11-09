@@ -5,6 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -13,11 +15,10 @@ class MainActivity : AppCompatActivity() {
         get() = _binding ?: throw IllegalStateException()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
 
-        enableEdgeToEdge()
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -25,16 +26,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        showCategoriesFragment()
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                add<CategoriesListFragment>(R.id.mainContainer)
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
+        }
 
-    }
-
-    private fun showCategoriesFragment() {
-        val fragment = CategoriesListFragment()
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainContainer, fragment)
-            .commit()
     }
 
     override fun onDestroy() {

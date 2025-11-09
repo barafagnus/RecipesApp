@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
 
-
 class CategoriesListFragment : Fragment() {
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding
