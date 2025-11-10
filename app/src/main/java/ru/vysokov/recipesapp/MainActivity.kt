@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +16,8 @@ class MainActivity : AppCompatActivity() {
         get() = _binding ?: throw IllegalStateException()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         _binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -24,6 +25,24 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        with(binding) {
+            btnCategories.setOnClickListener {
+                supportFragmentManager.commit {
+                    replace<CategoriesListFragment>(R.id.mainContainer)
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                }
+            }
+
+            btnFavorites.setOnClickListener {
+                supportFragmentManager.commit {
+                    replace<FavoritesFragment>(R.id.mainContainer)
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                }
+            }
         }
 
         if (savedInstanceState == null) {
