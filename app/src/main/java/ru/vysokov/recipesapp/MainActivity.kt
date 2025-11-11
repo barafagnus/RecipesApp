@@ -1,8 +1,10 @@
 package ru.vysokov.recipesapp
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.add
@@ -49,9 +51,9 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 add<CategoriesListFragment>(R.id.mainContainer)
                 setReorderingAllowed(true)
-                addToBackStack(null)
             }
         }
+        ContextCompat.getDrawable(this, R.drawable.ic_heart)
 
     }
 
