@@ -30,6 +30,7 @@
             android:layout_marginStart="@dimen/padding_8"
             android:layout_marginTop="@dimen/padding_8"
             android:layout_marginEnd="@dimen/padding_8"
+            android:fontFamily="@font/montserrat_alternates_semi_bold"
             android:textColor="@color/on_surface_color"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,6 +44,7 @@
             android:layout_marginTop="@dimen/padding_8"
             android:layout_marginEnd="@dimen/padding_8"
             android:layout_marginBottom="@dimen/padding_8"
+            android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/on_surface_variant_color"
             android:textSize="14sp"
             tool:text="Recipes for all popular types of burgers" />
