@@ -10,6 +10,10 @@
     <dimen name="padding_2">2dp</dimen>
 
     <dimen name="width_162">162dp</dimen>
+    <dimen name="height_224">224dp</dimen>
+    <dimen name="height_130">130dp</dimen>
+    <dimen name="height_44">44dp</dimen>
+    <dimen name="width_155">155dp</dimen>
     <dimen name="height_36">36dp</dimen>
 
     <dimen name="corner_8">8dp</dimen>
