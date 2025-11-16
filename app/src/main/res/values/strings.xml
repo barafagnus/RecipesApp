@@ -4,4 +4,6 @@
     <string name="favorites">Favorites</string>
     <string name="cdCategoriesImg">Categories image</string>
     <string name="cdCategoryItemImg">Category item image</string>
+    <string name="cdButtonCategories">Categories button</string>
+    <string name="cdButtonFavorites">Favorites button</string>
 </resources>

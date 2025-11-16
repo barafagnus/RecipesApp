@@ -4,4 +4,6 @@
     <string name="favorites">Избранное</string>
     <string name="cdCategoriesImg">Изображение категории</string>
     <string name="cdCategoryItemImg">Изображение блюда</string>
+    <string name="cdButtonCategories">Кнопка категории</string>
+    <string name="cdButtonFavorites">Кнопка избранное</string>
 </resources>
