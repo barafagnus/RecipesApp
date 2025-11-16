@@ -2,4 +2,6 @@
     <string name="app_name" translatable="false">RecipesApp</string>
     <string name="categories">Categories</string>
     <string name="favorites">Favorites</string>
+    <string name="cdCategoriesImg">Categories image</string>
+    <string name="cdCategoryItemImg">Category item image</string>
 </resources>

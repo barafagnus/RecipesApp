@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/padding_8"
-    android:layout_marginVertical="@dimen/padding_8"
+    android:layout_margin="@dimen/padding_8"
     android:clickable="true"
     android:focusable="true"
+    android:foreground="?android:selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_8"
     app:cardElevation="@dimen/padding_8">
 
@@ -17,37 +17,29 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/card_image"
+            android:id="@+id/ivCategoryCard"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_130"
+            android:contentDescription="@string/cdCategoryItemImg"
             android:scaleType="centerCrop"
-            tool:src="@drawable/bcg_categories" />
+            tools:src="@drawable/bcg_categories" />
 
         <TextView
-            android:id="@+id/card_title"
+            android:id="@+id/tvCardTitle"
+            style="@style/StyleTitle18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_8"
+            android:layout_marginHorizontal="@dimen/padding_8"
             android:layout_marginTop="@dimen/padding_8"
-            android:layout_marginEnd="@dimen/padding_8"
-            android:fontFamily="@font/montserrat_alternates_semi_bold"
-            android:textColor="@color/on_surface_color"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tool:text="Burgers" />
+            tools:text="Burgers" />
 
         <TextView
-            android:id="@+id/card_description"
+            android:id="@+id/tvCardDescription"
+            style="@style/StyleDescription14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_8"
-            android:layout_marginTop="@dimen/padding_8"
-            android:layout_marginEnd="@dimen/padding_8"
-            android:layout_marginBottom="@dimen/padding_8"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/on_surface_variant_color"
-            android:textSize="14sp"
-            tool:text="Recipes for all popular types of burgers" />
+            android:layout_margin="@dimen/padding_8"
+            tools:text="Recipes for all popular types of burgers" />
 
     </LinearLayout>
 

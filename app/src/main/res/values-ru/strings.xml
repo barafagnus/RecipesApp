@@ -2,4 +2,6 @@
     <string name="app_name">RecipesApp</string>
     <string name="categories">Категории</string>
     <string name="favorites">Избранное</string>
+    <string name="cdCategoriesImg">Изображение категории</string>
+    <string name="cdCategoryItemImg">Изображение блюда</string>
 </resources>
