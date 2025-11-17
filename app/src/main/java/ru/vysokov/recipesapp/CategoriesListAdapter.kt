@@ -34,7 +34,7 @@ class CategoriesListAdapter(
         val drawable =
             try {
                 Drawable.createFromStream(
-                    viewHolder.itemView.context?.assets?.open(category.imageUrl),
+                    viewHolder.itemView.context.assets.open(category.imageUrl),
                     null
                 )
             } catch (e: Exception) {
@@ -42,9 +42,12 @@ class CategoriesListAdapter(
                 null
             }
 
-        viewHolder.ivCategoryCard.setImageDrawable(drawable)
-        viewHolder.tvCardTitle.text = category.title
-        viewHolder.tvCardDescription.text = category.description
+        with(viewHolder) {
+            ivCategoryCard.setImageDrawable(drawable)
+            tvCardTitle.text = category.title
+            tvCardDescription.text = category.description
+        }
+
 
     }
 

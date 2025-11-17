@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import ru.vysokov.recipesapp.data.repository.STUB
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
 
@@ -29,8 +28,7 @@ class CategoriesListFragment : Fragment() {
 
         val dataset = STUB.getCategories()
         val categoriesListAdapter = CategoriesListAdapter(dataset)
-
-        val categoriesListRecyclerView = view.findViewById<RecyclerView>(R.id.rvCategories)
+        val categoriesListRecyclerView = binding.rvCategories
         categoriesListRecyclerView.layoutManager = GridLayoutManager(view.context, 2)
         categoriesListRecyclerView.adapter = categoriesListAdapter
     }
