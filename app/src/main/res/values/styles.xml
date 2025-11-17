@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <style name="StyleTitle14" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/size_14</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semi_bold</item>
@@ -12,5 +12,25 @@
         <item name="cornerRadius">@dimen/corner_8</item>
         <item name="android:textAppearance">@style/StyleTitle14</item>
     </style>
-    
+
+    <style name="StyleTitle18" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textColor">@color/on_surface_color</item>
+        <item name="android:textSize">@dimen/size_18</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StyleTitle20" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/montserrat_alternates_semi_bold</item>
+        <item name="android:textColor">@color/on_surface_color</item>
+        <item name="android:textSize">@dimen/size_20</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StyleDescription14" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/on_surface_variant_color</item>
+        <item name="android:textSize">@dimen/size_14</item>
+    </style>
+
 </resources>

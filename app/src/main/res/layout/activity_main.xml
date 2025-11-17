@@ -36,6 +36,7 @@
             android:layout_marginEnd="@dimen/padding_2"
             android:layout_weight="1"
             android:backgroundTint="@color/primary_button_color"
+            android:contentDescription="@string/cdButtonCategories"
             android:text="@string/categories" />
 
         <Button
@@ -46,6 +47,7 @@
             android:layout_marginStart="@dimen/padding_2"
             android:layout_weight="1"
             android:backgroundTint="@color/secondary_button_color"
+            android:contentDescription="@string/cdButtonFavorites"
             android:text="@string/favorites"
             app:icon="@drawable/ic_heart_empty"
             app:iconGravity="textEnd" />
