@@ -18,6 +18,7 @@
         <item name="android:textColor">@color/on_surface_color</item>
         <item name="android:textSize">@dimen/size_18</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="StyleTitle20" parent="TextAppearance.AppCompat">
@@ -25,6 +26,7 @@
         <item name="android:textColor">@color/on_surface_color</item>
         <item name="android:textSize">@dimen/size_20</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="StyleDescription14" parent="TextAppearance.AppCompat">

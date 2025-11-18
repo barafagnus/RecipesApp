@@ -33,7 +33,6 @@
             android:gravity="center"
             android:padding="@dimen/padding_10"
             android:text="@string/categories"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
