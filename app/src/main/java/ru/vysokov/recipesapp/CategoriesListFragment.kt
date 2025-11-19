@@ -39,7 +39,7 @@ class CategoriesListFragment : Fragment() {
         val dataset = STUB.getCategories()
         val categoriesListAdapter = CategoriesListAdapter(dataset)
         val categoriesListRecyclerView = binding.rvCategories
-        categoriesListRecyclerView.layoutManager = GridLayoutManager(view?.context, 2)
+        categoriesListRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         categoriesListRecyclerView.adapter = categoriesListAdapter
 
         categoriesListAdapter.setOnItemClickListener(

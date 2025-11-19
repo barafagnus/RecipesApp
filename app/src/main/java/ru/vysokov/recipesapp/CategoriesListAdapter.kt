@@ -58,7 +58,7 @@ class CategoriesListAdapter(
             tvCardDescription.text = category.description
         }
 
-        viewHolder.ivCategoryCard.setOnClickListener {
+        viewHolder.itemView.setOnClickListener {
             itemClickListener?.onItemClick()
         }
     }
