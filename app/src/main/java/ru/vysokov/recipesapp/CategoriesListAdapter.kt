@@ -21,7 +21,7 @@ class CategoriesListAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick()
+        fun onItemClick(categoryId: Int)
     }
 
     class ViewHolder(
@@ -59,7 +59,7 @@ class CategoriesListAdapter(
         }
 
         viewHolder.itemView.setOnClickListener {
-            itemClickListener?.onItemClick()
+            itemClickListener?.onItemClick(category.id)
         }
     }
 

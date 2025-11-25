@@ -3,12 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipesListFragment"
-    android:background="@color/background_color">
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    tools:context=".RecipesListFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="fragment_recipes_list" />
+
+    <TextView
+        android:id="@+id/tvCategoryId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="category_id = " />
+
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="category_name = " />
+
+    <TextView
+        android:id="@+id/tvCategoryImageUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="category_image_url = " />
 
 </LinearLayout>
