@@ -6,4 +6,5 @@
     <string name="cdCategoryItemImg">Изображение блюда</string>
     <string name="cdButtonCategories">Кнопка категории</string>
     <string name="cdButtonFavorites">Кнопка избранное</string>
+    <string name="cdRecipeCard">Корточка рецепта</string>
 </resources>

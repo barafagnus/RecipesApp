@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,27 +8,43 @@
     android:orientation="vertical"
     tools:context=".RecipesListFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="fragment_recipes_list" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_224">
 
-    <TextView
-        android:id="@+id/tvCategoryId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="category_id = " />
+        <ImageView
+            android:id="@+id/ivRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cdRecipeCard"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/bcg_categories" />
 
-    <TextView
-        android:id="@+id/tvCategoryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="category_name = " />
+        <TextView
+            android:id="@+id/tvRecipesTitle"
+            style="@style/StyleTitle20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_16"
+            android:layout_marginBottom="@dimen/padding_16"
+            android:background="@drawable/rounded_shape"
+            android:gravity="center"
+            android:padding="@dimen/padding_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Recipes" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tvCategoryImageUrl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="category_image_url = " />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/padding_8"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_recipe" />
 
 </LinearLayout>
