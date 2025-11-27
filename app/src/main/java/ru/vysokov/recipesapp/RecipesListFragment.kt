@@ -56,15 +56,19 @@ class RecipesListFragment : Fragment() {
         recipesListAdapter.setOnItemClickListener(
             object : RecipesListAdapter.OnItemClickListener {
                 override fun onItemClick(recipeId: Int) {
-                    openRecipeByRecipeId(categoryId)
+                    openRecipeByRecipeId(recipeId)
                 }
             }
         )
     }
 
-    private fun openRecipeByRecipeId(categoryId: Int?) {
+    private fun openRecipeByRecipeId(recipeId: Int?) {
+        val recipe = STUB.getRecipeById(recipeId)
+        val bundle = Bundle()
+        bundle.putParcelable(RecipeConstants.ARG_RECIPE, recipe)
+
         parentFragmentManager.commit {
-            replace<RecipeFragment>(R.id.mainContainer)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
             setReorderingAllowed(true)
             addToBackStack(null)
         }

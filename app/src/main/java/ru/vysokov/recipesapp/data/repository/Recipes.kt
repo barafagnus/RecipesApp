@@ -5,6 +5,14 @@ import ru.vysokov.recipesapp.models.Ingredient
 import ru.vysokov.recipesapp.models.Recipe
 
 object STUB {
+
+    fun getRecipesByCategoryId(categoryId: Int?) =
+        if (categoryId == 0) burgerRecipes else emptyList()
+
+    fun getRecipeById(recipeId: Int?) = burgerRecipes.find { it.id == recipeId }
+
+    fun getCategories() = categories
+
     private val burgerRecipes = listOf(
         Recipe(
             id = 0,
@@ -227,9 +235,6 @@ object STUB {
         )
     )
 
-    fun getRecipesByCategoryId(categoryId: Int?) =
-        if (categoryId == 0) burgerRecipes else listOf()
-
     private val categories: List<Category> = listOf(
         Category(
             0,
@@ -269,5 +274,4 @@ object STUB {
         ),
     )
 
-    fun getCategories() = categories
 }
