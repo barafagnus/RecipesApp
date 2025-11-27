@@ -1,12 +1,11 @@
 package ru.vysokov.recipesapp
 
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.ItemCategoryBinding
 import ru.vysokov.recipesapp.models.Category
 
@@ -40,17 +39,7 @@ class CategoriesListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val category = dataSet[position]
-
-        val drawable =
-            try {
-                Drawable.createFromStream(
-                    viewHolder.itemView.context.assets.open(category.imageUrl),
-                    null
-                )
-            } catch (e: Exception) {
-                Log.e("!!! CategoriesListAdapter", e.stackTraceToString())
-                null
-            }
+        val drawable = AssetLoader.loadAssets(viewHolder.itemView.context, category.imageUrl)
 
         with(viewHolder) {
             ivCategoryCard.setImageDrawable(drawable)

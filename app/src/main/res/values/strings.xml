@@ -6,4 +6,5 @@
     <string name="cdCategoryItemImg">Category item image</string>
     <string name="cdButtonCategories">Categories button</string>
     <string name="cdButtonFavorites">Favorites button</string>
+    <string name="cdRecipeCard">Recipe card</string>
 </resources>
