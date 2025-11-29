@@ -7,4 +7,7 @@
     <string name="cdButtonCategories">Кнопка категории</string>
     <string name="cdButtonFavorites">Кнопка избранное</string>
     <string name="cdRecipeCard">Корточка рецепта</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="portions">Порции:</string>
+    <string name="method">Способ приготовления</string>
 </resources>

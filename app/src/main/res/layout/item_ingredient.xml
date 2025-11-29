@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/padding_8"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvIngredient"
+            style="@style/StyleDescriptionRegular14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textAllCaps="true"
+            tools:text="Ingredient" />
+
+        <TextView
+            android:id="@+id/tvQuantity"
+            style="@style/StyleDescriptionRegular14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textAllCaps="true"
+            tools:text="300 G" />
+    </LinearLayout>
+
+
+</LinearLayout>
