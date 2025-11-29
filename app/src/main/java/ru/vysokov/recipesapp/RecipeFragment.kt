@@ -36,8 +36,8 @@ class RecipeFragment : Fragment() {
         with(binding) {
             tvRecipeImage.text = recipe?.imageUrl
             tvRecipeTitle.text = recipe?.title
-            tvRecipeIngredients.text = recipe?.ingredients?.get(0).toString()
-            tvRecipeMethod.text = recipe?.method?.get(0).toString()
+            tvRecipeIngredients.text = recipe?.ingredients?.firstOrNull().toString()
+            tvRecipeMethod.text = recipe?.method?.firstOrNull()
         }
     }
 
