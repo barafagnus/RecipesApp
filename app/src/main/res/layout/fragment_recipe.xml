@@ -45,8 +45,7 @@
                 android:layout_marginStart="@dimen/padding_16"
                 android:layout_marginBottom="@dimen/padding_16"
                 android:background="@drawable/rounded_shape"
-                android:gravity="left"
-                android:maxEms="10"
+                android:gravity="start"
                 android:padding="@dimen/padding_10"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,22 +90,15 @@
             android:layout_marginHorizontal="@dimen/padding_16"
             android:layout_marginTop="@dimen/padding_6" />
 
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvIngredients"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/padding_16"
-            app:cardCornerRadius="@dimen/corner_8"
-            app:cardElevation="@dimen/elevation_0">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvIngredients"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:paddingHorizontal="@dimen/padding_12"
-                android:paddingVertical="@dimen/padding_4"
-                tools:itemCount="7" />
-        </androidx.cardview.widget.CardView>
+            android:background="@drawable/rounded_white_shape"
+            android:paddingHorizontal="@dimen/padding_12"
+            android:paddingVertical="@dimen/padding_4"
+            tools:itemCount="7" />
 
         <TextView
             style="@style/StyleTitle20"
@@ -115,22 +107,15 @@
             android:layout_marginStart="@dimen/padding_16"
             android:text="@string/method" />
 
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMethod"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/padding_16"
-            app:cardCornerRadius="@dimen/corner_8"
-            app:cardElevation="@dimen/elevation_0">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvMethod"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/padding_12"
-                android:paddingVertical="@dimen/padding_4"
-                tools:itemCount="7" />
-        </androidx.cardview.widget.CardView>
+            android:background="@drawable/rounded_white_shape"
+            android:paddingHorizontal="@dimen/padding_12"
+            android:paddingVertical="@dimen/padding_4"
+            tools:itemCount="7" />
 
     </LinearLayout>
-
 </androidx.core.widget.NestedScrollView>
