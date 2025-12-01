@@ -7,4 +7,7 @@
     <string name="cdButtonCategories">Categories button</string>
     <string name="cdButtonFavorites">Favorites button</string>
     <string name="cdRecipeCard">Recipe card</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="portions">Portions:</string>
+    <string name="method">Method of preparation</string>
 </resources>
