@@ -28,7 +28,8 @@ class IngredientsAdapter(
         val ingredient = dataSet[position]
         with(viewHolder) {
             tvIngredient.text = ingredient.description
-            tvQuantity.text = convertQuantity(ingredient.quantity, quantity)
+            tvQuantity.text =
+                "${convertQuantity(ingredient.quantity, quantity)} ${ingredient.unitOfMeasure}"
         }
     }
 
@@ -40,13 +41,8 @@ class IngredientsAdapter(
     }
 
     private fun convertQuantity(ingredientQuantity: String, sbQuantity: Int): String {
-        val value = ingredientQuantity.toDoubleOrNull() ?: return ""
-        val result = value * sbQuantity
-
-        return if (result % 1.0 == 0.0) {
-            result.toInt().toString()
-        } else {
-            String.format("%.1f", result)
-        }
+        val value = ingredientQuantity.toBigDecimalOrNull() ?: return ""
+        val result = value.multiply(sbQuantity.toBigDecimal())
+        return result.stripTrailingZeros().toPlainString()
     }
 }
