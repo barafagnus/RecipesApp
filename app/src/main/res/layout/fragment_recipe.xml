@@ -80,17 +80,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_6"
-                tools:text="1" />
+                android:text="1" />
         </LinearLayout>
 
         <SeekBar
             android:id="@+id/sbNumberOfPortions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:min="1"
-            android:max="5"
             android:layout_marginHorizontal="@dimen/padding_16"
-            android:layout_marginTop="@dimen/padding_6" />
+            android:layout_marginTop="@dimen/padding_6"
+            android:max="5"
+            android:min="1" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIngredients"
