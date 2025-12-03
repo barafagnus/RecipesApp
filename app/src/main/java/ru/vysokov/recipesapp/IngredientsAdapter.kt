@@ -9,6 +9,7 @@ import ru.vysokov.recipesapp.models.Ingredient
 class IngredientsAdapter(
     private val dataSet: List<Ingredient>
 ) : RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
+    private var quantity: Int = 1
 
     class ViewHolder(
         binding: ItemIngredientBinding
@@ -25,12 +26,23 @@ class IngredientsAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val ingredient = dataSet[position]
-
         with(viewHolder) {
             tvIngredient.text = ingredient.description
-            tvQuantity.text = "${ingredient.quantity} ${ingredient.unitOfMeasure}"
+            tvQuantity.text =
+                "${convertQuantity(ingredient.quantity, quantity)} ${ingredient.unitOfMeasure}"
         }
     }
 
     override fun getItemCount(): Int = dataSet.size
+
+    fun updateIngredients(progress: Int) {
+        quantity = progress
+        notifyDataSetChanged()
+    }
+
+    private fun convertQuantity(ingredientQuantity: String, sbQuantity: Int): String {
+        val value = ingredientQuantity.toBigDecimalOrNull() ?: return ""
+        val result = value.multiply(sbQuantity.toBigDecimal())
+        return result.stripTrailingZeros().toPlainString()
+    }
 }
