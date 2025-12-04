@@ -66,6 +66,14 @@ class RecipeFragment : Fragment() {
         with(binding) {
             ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
             tvTitle.text = recipe?.title.orEmpty()
+            ibToFavorites.setOnClickListener {
+                ibToFavorites.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_heart
+                    )
+                )
+            }
         }
     }
 
