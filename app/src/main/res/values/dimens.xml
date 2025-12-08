@@ -15,6 +15,10 @@
     <dimen name="padding_4">4dp</dimen>
     <dimen name="padding_2">2dp</dimen>
 
+    <dimen name="width_8">8dp</dimen>
+    <dimen name="height_30">30dp</dimen>
+    <dimen name="height_16">16dp</dimen>
+
     <dimen name="elevation_0">0dp</dimen>
 
     <dimen name="width_162">162dp</dimen>
@@ -26,4 +30,6 @@
     <dimen name="height_36">36dp</dimen>
 
     <dimen name="corner_8">8dp</dimen>
+    <dimen name="corner_4">4dp</dimen>
+    <dimen name="corner_2">2dp</dimen>
 </resources>
