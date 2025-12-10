@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,18 +64,51 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(view: View, recipe: Recipe?) {
+        val favorites = getFavorites()
+        val currentId = recipe?.id.toString()
+
         with(binding) {
             ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
             tvTitle.text = recipe?.title.orEmpty()
-            ibToFavorites.setOnClickListener {
+
+            val updateIcon = { isFavorite: Boolean ->
+                val iconRes = if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
                 ibToFavorites.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_heart
-                    )
+                    ContextCompat.getDrawable(requireContext(), iconRes)
                 )
             }
+            updateIcon(currentId in favorites)
+
+            ibToFavorites.setOnClickListener {
+                val isFavorite = if (currentId in favorites) {
+                    favorites.remove(currentId)
+                    false
+                } else {
+                    favorites.add(currentId)
+                    true
+                }
+
+                updateIcon(isFavorite)
+                saveFavorites(favorites)
+            }
         }
+    }
+
+    private fun saveFavorites(recipeIds: Set<String>) {
+        val sharedPref = requireContext()
+            .getSharedPreferences(SharedPrefsConstants.FAVORITES_FILE, Context.MODE_PRIVATE)
+
+        sharedPref.edit {
+            putStringSet(SharedPrefsConstants.FAVORITES_KEY, recipeIds)
+        }
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPref = requireContext()
+            .getSharedPreferences(SharedPrefsConstants.FAVORITES_FILE, Context.MODE_PRIVATE)
+
+        return sharedPref.getStringSet(SharedPrefsConstants.FAVORITES_KEY, emptySet())
+            ?.toMutableSet() ?: mutableSetOf()
     }
 
     private fun initRecycler(
