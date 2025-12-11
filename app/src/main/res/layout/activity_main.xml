@@ -39,7 +39,7 @@
             android:contentDescription="@string/cdButtonCategories"
             android:text="@string/categories" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFavorites"
             style="@style/StyleNavButton"
             android:layout_width="0dp"
@@ -50,6 +50,7 @@
             android:contentDescription="@string/cdButtonFavorites"
             android:text="@string/favorites"
             app:icon="@drawable/ic_heart_empty"
+            app:iconSize="@dimen/size_21"
             app:iconGravity="textEnd" />
     </LinearLayout>
 
