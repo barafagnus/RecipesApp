@@ -10,4 +10,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="portions">Portions:</string>
     <string name="method">Method of preparation</string>
+    <string name="emptyFavorites">You have not yet added a single recipe to your favorites</string>
 </resources>

@@ -35,6 +35,12 @@
         <item name="android:textSize">@dimen/size_16</item>
     </style>
 
+    <style name="StyleDescriptionRegular16" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/on_surface_variant_color</item>
+        <item name="android:textSize">@dimen/size_16</item>
+    </style>
+
     <style name="StyleDescription14" parent="TextAppearance.AppCompat">
         <item name="fontFamily">@font/montserrat_medium</item>
         <item name="android:textColor">@color/on_surface_variant_color</item>

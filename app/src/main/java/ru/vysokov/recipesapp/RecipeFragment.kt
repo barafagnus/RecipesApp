@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.data.utils.AssetLoader
+import ru.vysokov.recipesapp.data.utils.FavoritesManager.getFavorites
+import ru.vysokov.recipesapp.data.utils.FavoritesManager.saveFavorites
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
 import ru.vysokov.recipesapp.models.Recipe
 
@@ -64,20 +65,14 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(view: View, recipe: Recipe?) {
-        val favorites = getFavorites()
+        val favorites = getFavorites(requireContext())
         val currentId = recipe?.id.toString()
 
         with(binding) {
             ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
             tvTitle.text = recipe?.title.orEmpty()
 
-            val updateIcon = { isFavorite: Boolean ->
-                val iconRes = if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
-                ibToFavorites.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(), iconRes)
-                )
-            }
-            updateIcon(currentId in favorites)
+            updateFavoriteIcon(currentId in favorites)
 
             ibToFavorites.setOnClickListener {
                 val isFavorite = if (currentId in favorites) {
@@ -87,28 +82,17 @@ class RecipeFragment : Fragment() {
                     favorites.add(currentId)
                     true
                 }
-
-                updateIcon(isFavorite)
-                saveFavorites(favorites)
+                updateFavoriteIcon(isFavorite)
+                saveFavorites(requireContext(), favorites)
             }
         }
     }
 
-    private fun saveFavorites(recipeIds: Set<String>) {
-        val sharedPref = requireContext()
-            .getSharedPreferences(SharedPrefsConstants.FAVORITES_FILE, Context.MODE_PRIVATE)
-
-        sharedPref.edit {
-            putStringSet(SharedPrefsConstants.FAVORITES_KEY, recipeIds)
-        }
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPref = requireContext()
-            .getSharedPreferences(SharedPrefsConstants.FAVORITES_FILE, Context.MODE_PRIVATE)
-
-        return sharedPref.getStringSet(SharedPrefsConstants.FAVORITES_KEY, emptySet())
-            ?.toMutableSet() ?: mutableSetOf()
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        val iconRes = if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
+        binding.ibToFavorites.setImageDrawable(
+            ContextCompat.getDrawable(requireContext(), iconRes)
+        )
     }
 
     private fun initRecycler(
