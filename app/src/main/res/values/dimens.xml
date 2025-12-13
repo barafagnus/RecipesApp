@@ -8,6 +8,8 @@
     <dimen name="size_14">14sp</dimen>
     <dimen name="size_12">12sp</dimen>
 
+    <dimen name="padding_21">21dp</dimen>
+    <dimen name="padding_18">18dp</dimen>
     <dimen name="padding_16">16dp</dimen>
     <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_10">10dp</dimen>
