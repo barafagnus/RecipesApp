@@ -37,8 +37,6 @@
                 android:contentDescription="@string/cdButtonFavorites"
                 android:focusable="true"
                 android:foreground="?android:selectableItemBackground"
-                android:minWidth="@dimen/size_40"
-                android:minHeight="@dimen/size_40"
                 android:scaleType="center"
                 android:src="@drawable/ic_heart_empty"
                 app:layout_constraintEnd_toEndOf="parent"
