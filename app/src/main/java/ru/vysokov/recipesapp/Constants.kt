@@ -9,8 +9,3 @@ object CategoryConstants {
 object RecipeConstants {
     const val ARG_RECIPE = "ARG_RECIPE"
 }
-
-object SharedPrefsConstants {
-    const val FAVORITES_FILE = "FAVORITES_FILE"
-    const val FAVORITES_KEY = "FAVORITES_KEY"
-}

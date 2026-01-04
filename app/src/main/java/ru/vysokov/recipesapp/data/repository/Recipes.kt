@@ -11,6 +11,9 @@ object STUB {
 
     fun getRecipeById(recipeId: Int?) = burgerRecipes.find { it.id == recipeId }
 
+    fun getRecipesById(recipeIds: Set<Int>): List<Recipe> =
+        recipeIds.mapNotNull { getRecipeById(it) }
+
     fun getCategories() = categories
 
     private val burgerRecipes = listOf(
