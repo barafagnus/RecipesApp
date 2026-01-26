@@ -1,4 +1,4 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.core
 
 object CategoryConstants {
     const val ARG_CATEGORY_ID = "ARG_CATEGORY_ID"

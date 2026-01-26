@@ -1,8 +1,8 @@
 package ru.vysokov.recipesapp.data.repository
 
-import ru.vysokov.recipesapp.models.Category
-import ru.vysokov.recipesapp.models.Ingredient
-import ru.vysokov.recipesapp.models.Recipe
+import ru.vysokov.recipesapp.model.Category
+import ru.vysokov.recipesapp.model.Ingredient
+import ru.vysokov.recipesapp.model.Recipe
 
 object STUB {
 

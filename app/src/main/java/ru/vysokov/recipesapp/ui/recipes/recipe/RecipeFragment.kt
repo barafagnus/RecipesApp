@@ -1,4 +1,4 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.recipes.recipe
 
 import android.content.Context
 import android.os.Build
@@ -7,18 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.core.RecipeConstants
 import ru.vysokov.recipesapp.data.utils.AssetLoader
-import ru.vysokov.recipesapp.data.utils.FavoritesManager.getFavorites
-import ru.vysokov.recipesapp.data.utils.FavoritesManager.saveFavorites
+import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
-import ru.vysokov.recipesapp.models.Recipe
-
+import ru.vysokov.recipesapp.model.Recipe
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
@@ -65,7 +64,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(view: View, recipe: Recipe?) {
-        val favorites = getFavorites(requireContext())
+        val favorites = FavoritesManager.getFavorites(requireContext())
         val currentId = recipe?.id.toString()
 
         with(binding) {
@@ -83,7 +82,7 @@ class RecipeFragment : Fragment() {
                     true
                 }
                 updateFavoriteIcon(isFavorite)
-                saveFavorites(requireContext(), favorites)
+                FavoritesManager.saveFavorites(requireContext(), favorites)
             }
         }
     }
@@ -109,7 +108,7 @@ class RecipeFragment : Fragment() {
 
     private fun initSeekBar(adapter: IngredientsAdapter) {
         binding.sbNumberOfPortions.setOnSeekBarChangeListener(object :
-            OnSeekBarChangeListener {
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: SeekBar?,
                 progress: Int,

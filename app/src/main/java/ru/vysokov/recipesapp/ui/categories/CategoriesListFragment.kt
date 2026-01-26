@@ -1,4 +1,4 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.recyclerview.widget.GridLayoutManager
+import ru.vysokov.recipesapp.core.CategoryConstants
+import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.ui.recipes.recipeslist.RecipesListFragment
 import ru.vysokov.recipesapp.data.repository.STUB
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
 
