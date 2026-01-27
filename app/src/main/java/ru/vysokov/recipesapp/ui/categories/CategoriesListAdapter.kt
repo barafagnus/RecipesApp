@@ -1,13 +1,14 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.categories
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.ItemCategoryBinding
-import ru.vysokov.recipesapp.models.Category
+import ru.vysokov.recipesapp.model.Category
 
 class CategoriesListAdapter(
     private val dataSet: List<Category>

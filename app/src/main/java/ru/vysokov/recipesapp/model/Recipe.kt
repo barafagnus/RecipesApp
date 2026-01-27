@@ -1,4 +1,4 @@
-package ru.vysokov.recipesapp.models
+package ru.vysokov.recipesapp.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

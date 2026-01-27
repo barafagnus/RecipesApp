@@ -1,4 +1,4 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,7 +8,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
+import ru.vysokov.recipesapp.ui.categories.CategoriesListFragment
+import ru.vysokov.recipesapp.ui.recipes.favorites.FavoritesFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null

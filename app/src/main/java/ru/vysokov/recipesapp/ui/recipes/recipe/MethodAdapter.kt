@@ -1,8 +1,9 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.recipes.recipe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.databinding.ItemMethodBinding
 
 class MethodAdapter(

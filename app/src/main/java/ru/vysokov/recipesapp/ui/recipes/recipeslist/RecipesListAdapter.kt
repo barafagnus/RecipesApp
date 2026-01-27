@@ -1,11 +1,12 @@
-package ru.vysokov.recipesapp
+package ru.vysokov.recipesapp.ui.recipes.recipeslist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.ItemRecipeBinding
-import ru.vysokov.recipesapp.models.Recipe
+import ru.vysokov.recipesapp.model.Recipe
 
 class RecipesListAdapter(private val dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
