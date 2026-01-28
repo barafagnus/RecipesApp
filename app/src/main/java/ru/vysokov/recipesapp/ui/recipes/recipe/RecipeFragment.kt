@@ -3,7 +3,6 @@ package ru.vysokov.recipesapp.ui.recipes.recipe
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
 import ru.vysokov.recipesapp.data.utils.AssetLoader
-import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
 import ru.vysokov.recipesapp.model.Recipe
 
@@ -39,6 +37,8 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recipe = getRecipeFromBundle()
+        viewModel.loadRecipe(recipe?.id)
+
         initUi(view, recipe)
 
         val ingredientsAdapter = IngredientsAdapter(recipe?.ingredients.orEmpty())
@@ -55,9 +55,6 @@ class RecipeFragment : Fragment() {
             MethodAdapter(recipe?.method.orEmpty())
         )
 
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            Log.i("!!!", state.isFavorite.toString())
-        }
     }
 
     private fun getRecipeFromBundle(): Recipe? {
@@ -71,25 +68,18 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(view: View, recipe: Recipe?) {
-        val favorites = FavoritesManager.getFavorites(requireContext())
-        val currentId = recipe?.id.toString()
 
-        with(binding) {
-            ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
-            tvTitle.text = recipe?.title.orEmpty()
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
 
-            updateFavoriteIcon(currentId in favorites)
+            with(binding) {
+                ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
+                tvTitle.text = recipe?.title.orEmpty()
 
-            ibToFavorites.setOnClickListener {
-                val isFavorite = if (currentId in favorites) {
-                    favorites.remove(currentId)
-                    false
-                } else {
-                    favorites.add(currentId)
-                    true
+                updateFavoriteIcon(state.isFavorite)
+
+                ibToFavorites.setOnClickListener {
+                    viewModel.onFavoritesClicked(recipe?.id)
                 }
-                updateFavoriteIcon(isFavorite)
-                FavoritesManager.saveFavorites(requireContext(), favorites)
             }
         }
     }
