@@ -3,12 +3,14 @@ package ru.vysokov.recipesapp.ui.recipes.recipe
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -23,6 +25,7 @@ class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
+    private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +54,10 @@ class RecipeFragment : Fragment() {
             binding.rvMethod,
             MethodAdapter(recipe?.method.orEmpty())
         )
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            Log.i("!!!", state.isFavorite.toString())
+        }
     }
 
     private fun getRecipeFromBundle(): Recipe? {
