@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.vysokov.recipesapp.data.repository.STUB
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
 
@@ -25,9 +26,15 @@ class RecipeViewModel(
 
     // TODO: load from network
     fun loadRecipe(recipeId: Int?) {
+        val recipe = STUB.getRecipeById(recipeId)
+
         _uiState.value = _uiState.value?.copy(
+            title = recipe?.title.toString(),
+            imageUrl = recipe?.imageUrl,
             isFavorite = recipeId?.toString() in getFavorites(),
-            //portionsCount = _uiState.value?.portionsCount ?: return
+            ingredients = recipe?.ingredients ?: emptyList(),
+            method = recipe?.method ?: emptyList(),
+            portionsCount = _uiState.value?.portionsCount ?: return
         )
     }
 

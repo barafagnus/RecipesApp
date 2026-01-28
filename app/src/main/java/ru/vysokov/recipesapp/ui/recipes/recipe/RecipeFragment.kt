@@ -1,7 +1,6 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
-import ru.vysokov.recipesapp.model.Recipe
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
@@ -36,12 +34,14 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recipe = getRecipeFromBundle()
-        viewModel.loadRecipe(recipe?.id)
+        val recipeId = getRecipeIdFromBundle()
+        viewModel.loadRecipe(recipeId)
 
-        initUi(view, recipe)
+        initUi(view, recipeId)
 
-        val ingredientsAdapter = IngredientsAdapter(recipe?.ingredients.orEmpty())
+        val ingredientsAdapter = IngredientsAdapter(
+            viewModel.uiState.value?.ingredients.orEmpty()
+        )
         initRecycler(
             view.context,
             binding.rvIngredients,
@@ -52,33 +52,30 @@ class RecipeFragment : Fragment() {
         initRecycler(
             view.context,
             binding.rvMethod,
-            MethodAdapter(recipe?.method.orEmpty())
+            MethodAdapter(
+                viewModel.uiState.value?.method.orEmpty()
+            )
         )
 
     }
 
-    private fun getRecipeFromBundle(): Recipe? {
+    private fun getRecipeIdFromBundle(): Int? {
         val bundle = arguments
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle?.getParcelable(RecipeConstants.ARG_RECIPE, Recipe::class.java)
-        } else {
-            bundle?.getParcelable(RecipeConstants.ARG_RECIPE)
-        }
+        return bundle?.getInt(RecipeConstants.ARG_RECIPE_ID)
     }
 
-    private fun initUi(view: View, recipe: Recipe?) {
+    private fun initUi(view: View, recipeId: Int?) {
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
 
             with(binding) {
-                ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
-                tvTitle.text = recipe?.title.orEmpty()
+                ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, state.imageUrl))
+                tvTitle.text = state.title
 
                 updateFavoriteIcon(state.isFavorite)
 
                 ibToFavorites.setOnClickListener {
-                    viewModel.onFavoritesClicked(recipe?.id)
+                    viewModel.onFavoritesClicked(recipeId)
                 }
             }
         }
