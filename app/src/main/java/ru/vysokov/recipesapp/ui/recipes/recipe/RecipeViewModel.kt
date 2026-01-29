@@ -34,7 +34,7 @@ class RecipeViewModel(
             isFavorite = recipeId?.toString() in getFavorites(),
             ingredients = recipe?.ingredients ?: emptyList(),
             method = recipe?.method ?: emptyList(),
-            portionsCount = _uiState.value?.portionsCount ?: return
+            portionsCount = _uiState.value?.portionsCount ?: 1
         )
     }
 
@@ -63,5 +63,4 @@ class RecipeViewModel(
     private fun saveFavorites(favorites: Set<String>) {
         FavoritesManager.saveFavorites(context.applicationContext, favorites)
     }
-
 }

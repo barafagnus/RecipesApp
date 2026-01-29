@@ -22,6 +22,8 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private val viewModel: RecipeViewModel by viewModels()
+    private lateinit var ingredientsAdapter: IngredientsAdapter
+    private lateinit var methodAdapter: MethodAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,29 +36,18 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val recipeId = getRecipeIdFromBundle()
         viewModel.loadRecipe(recipeId)
 
-        initUi(view, recipeId)
+        ingredientsAdapter = IngredientsAdapter(emptyList())
+        methodAdapter = MethodAdapter(emptyList())
 
-        val ingredientsAdapter = IngredientsAdapter(
-            viewModel.uiState.value?.ingredients.orEmpty()
-        )
-        initRecycler(
-            view.context,
-            binding.rvIngredients,
-            ingredientsAdapter
-        )
+        initRecycler(view.context, binding.rvIngredients, ingredientsAdapter)
         initSeekBar(ingredientsAdapter)
+        initRecycler(view.context, binding.rvMethod, methodAdapter)
 
-        initRecycler(
-            view.context,
-            binding.rvMethod,
-            MethodAdapter(
-                viewModel.uiState.value?.method.orEmpty()
-            )
-        )
-
+        initUi(view, recipeId)
     }
 
     private fun getRecipeIdFromBundle(): Int? {
@@ -65,8 +56,9 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(view: View, recipeId: Int?) {
-
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            ingredientsAdapter.updateDataSet(state.ingredients)
+            methodAdapter.updateDataSet(state.method)
 
             with(binding) {
                 ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, state.imageUrl))

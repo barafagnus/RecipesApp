@@ -8,7 +8,7 @@ import ru.vysokov.recipesapp.databinding.ItemIngredientBinding
 import ru.vysokov.recipesapp.model.Ingredient
 
 class IngredientsAdapter(
-    private val dataSet: List<Ingredient>
+    private var dataSet: List<Ingredient>
 ) : RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
     private var quantity: Int = 1
 
@@ -38,6 +38,11 @@ class IngredientsAdapter(
 
     fun updateIngredients(progress: Int) {
         quantity = progress
+        notifyDataSetChanged()
+    }
+
+    fun updateDataSet(newDataSet: List<Ingredient>) {
+        dataSet = newDataSet
         notifyDataSetChanged()
     }
 
