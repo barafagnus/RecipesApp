@@ -1,9 +1,7 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,15 +15,15 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
 import ru.vysokov.recipesapp.data.utils.AssetLoader
-import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
-import ru.vysokov.recipesapp.model.Recipe
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private val viewModel: RecipeViewModel by viewModels()
+    private lateinit var ingredientsAdapter: IngredientsAdapter
+    private lateinit var methodAdapter: MethodAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,58 +36,39 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recipe = getRecipeFromBundle()
-        initUi(view, recipe)
 
-        val ingredientsAdapter = IngredientsAdapter(recipe?.ingredients.orEmpty())
-        initRecycler(
-            view.context,
-            binding.rvIngredients,
-            ingredientsAdapter
-        )
+        val recipeId = getRecipeIdFromBundle()
+        viewModel.loadRecipe(recipeId)
+
+        ingredientsAdapter = IngredientsAdapter(emptyList())
+        methodAdapter = MethodAdapter(emptyList())
+
+        initRecycler(view.context, binding.rvIngredients, ingredientsAdapter)
         initSeekBar(ingredientsAdapter)
+        initRecycler(view.context, binding.rvMethod, methodAdapter)
 
-        initRecycler(
-            view.context,
-            binding.rvMethod,
-            MethodAdapter(recipe?.method.orEmpty())
-        )
-
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            Log.i("!!!", state.isFavorite.toString())
-        }
+        initUi(view, recipeId)
     }
 
-    private fun getRecipeFromBundle(): Recipe? {
+    private fun getRecipeIdFromBundle(): Int? {
         val bundle = arguments
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle?.getParcelable(RecipeConstants.ARG_RECIPE, Recipe::class.java)
-        } else {
-            bundle?.getParcelable(RecipeConstants.ARG_RECIPE)
-        }
+        return bundle?.getInt(RecipeConstants.ARG_RECIPE_ID)
     }
 
-    private fun initUi(view: View, recipe: Recipe?) {
-        val favorites = FavoritesManager.getFavorites(requireContext())
-        val currentId = recipe?.id.toString()
+    private fun initUi(view: View, recipeId: Int?) {
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            ingredientsAdapter.updateDataSet(state.ingredients)
+            methodAdapter.updateDataSet(state.method)
 
-        with(binding) {
-            ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, recipe?.imageUrl))
-            tvTitle.text = recipe?.title.orEmpty()
+            with(binding) {
+                ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, state.imageUrl))
+                tvTitle.text = state.title
 
-            updateFavoriteIcon(currentId in favorites)
+                updateFavoriteIcon(state.isFavorite)
 
-            ibToFavorites.setOnClickListener {
-                val isFavorite = if (currentId in favorites) {
-                    favorites.remove(currentId)
-                    false
-                } else {
-                    favorites.add(currentId)
-                    true
+                ibToFavorites.setOnClickListener {
+                    viewModel.onFavoritesClicked(recipeId)
                 }
-                updateFavoriteIcon(isFavorite)
-                FavoritesManager.saveFavorites(requireContext(), favorites)
             }
         }
     }

@@ -7,5 +7,5 @@ object CategoryConstants {
 }
 
 object RecipeConstants {
-    const val ARG_RECIPE = "ARG_RECIPE"
+    const val ARG_RECIPE_ID = "ARG_RECIPE_ID"
 }

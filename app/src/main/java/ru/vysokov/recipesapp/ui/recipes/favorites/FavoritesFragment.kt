@@ -9,11 +9,11 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
-import ru.vysokov.recipesapp.ui.recipes.recipe.RecipeFragment
-import ru.vysokov.recipesapp.ui.recipes.recipeslist.RecipesListAdapter
 import ru.vysokov.recipesapp.data.repository.STUB
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.databinding.FragmentFavoritesBinding
+import ru.vysokov.recipesapp.ui.recipes.recipe.RecipeFragment
+import ru.vysokov.recipesapp.ui.recipes.recipeslist.RecipesListAdapter
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
@@ -54,10 +54,9 @@ class FavoritesFragment : Fragment() {
         )
     }
 
-    private fun openRecipeByRecipeId(recipeId: Int?) {
-        val recipe = STUB.getRecipeById(recipeId)
+    private fun openRecipeByRecipeId(recipeId: Int) {
         val bundle = Bundle()
-        bundle.putParcelable(RecipeConstants.ARG_RECIPE, recipe)
+        bundle.putInt(RecipeConstants.ARG_RECIPE_ID, recipeId)
 
         parentFragmentManager.commit {
             replace<RecipeFragment>(R.id.mainContainer, args = bundle)
