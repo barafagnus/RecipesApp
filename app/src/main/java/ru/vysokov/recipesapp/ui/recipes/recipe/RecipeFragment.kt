@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
-import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
 
 class RecipeFragment : Fragment() {
@@ -47,7 +46,7 @@ class RecipeFragment : Fragment() {
         initSeekBar(ingredientsAdapter)
         initRecycler(view.context, binding.rvMethod, methodAdapter)
 
-        initUi(view, recipeId)
+        initUi(recipeId)
     }
 
     private fun getRecipeIdFromBundle(): Int? {
@@ -55,13 +54,13 @@ class RecipeFragment : Fragment() {
         return bundle?.getInt(RecipeConstants.ARG_RECIPE_ID)
     }
 
-    private fun initUi(view: View, recipeId: Int?) {
+    private fun initUi(recipeId: Int?) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             ingredientsAdapter.updateDataSet(state.ingredients)
             methodAdapter.updateDataSet(state.method)
 
             with(binding) {
-                ivImage.setImageDrawable(AssetLoader.loadAssets(view.context, state.imageUrl))
+                ivImage.setImageDrawable(state.recipeImage)
                 tvTitle.text = state.title
 
                 updateFavoriteIcon(state.isFavorite)
