@@ -35,18 +35,18 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val recipeId = getRecipeIdFromBundle()
-        viewModel.loadRecipe(recipeId)
 
         ingredientsAdapter = IngredientsAdapter(emptyList())
         methodAdapter = MethodAdapter(emptyList())
 
         initRecycler(view.context, binding.rvIngredients, ingredientsAdapter)
-        initSeekBar(ingredientsAdapter)
+        initSeekBar()
         initRecycler(view.context, binding.rvMethod, methodAdapter)
 
         initUi(recipeId)
+
+        viewModel.loadRecipe(recipeId)
     }
 
     private fun getRecipeIdFromBundle(): Int? {
@@ -58,6 +58,7 @@ class RecipeFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             ingredientsAdapter.updateDataSet(state.ingredients)
             methodAdapter.updateDataSet(state.method)
+            ingredientsAdapter.updateIngredients(state.portionsCount)
 
             with(binding) {
                 ivImage.setImageDrawable(state.recipeImage)
@@ -68,6 +69,8 @@ class RecipeFragment : Fragment() {
                 ibToFavorites.setOnClickListener {
                     viewModel.onFavoritesClicked(recipeId)
                 }
+
+                numberOfPortions.text = state.portionsCount.toString()
             }
         }
     }
@@ -91,7 +94,7 @@ class RecipeFragment : Fragment() {
         addDivider(context, recyclerView)
     }
 
-    private fun initSeekBar(adapter: IngredientsAdapter) {
+    private fun initSeekBar() {
         binding.sbNumberOfPortions.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
@@ -99,8 +102,7 @@ class RecipeFragment : Fragment() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                adapter.updateIngredients(progress)
-                binding.numberOfPortions.text = progress.toString()
+                viewModel.updatePortion(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
