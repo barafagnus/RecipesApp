@@ -23,6 +23,8 @@ class RecipeFragment : Fragment() {
     private val viewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientsAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
+    private var isInitRecyclers = false
+    private var isInitSeekBar = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,10 +42,6 @@ class RecipeFragment : Fragment() {
         ingredientsAdapter = IngredientsAdapter(emptyList())
         methodAdapter = MethodAdapter(emptyList())
 
-        initRecycler(view.context, binding.rvIngredients, ingredientsAdapter)
-        initSeekBar()
-        initRecycler(view.context, binding.rvMethod, methodAdapter)
-
         initUi(recipeId)
 
         viewModel.loadRecipe(recipeId)
@@ -59,6 +57,17 @@ class RecipeFragment : Fragment() {
             ingredientsAdapter.updateDataSet(state.ingredients)
             methodAdapter.updateDataSet(state.method)
             ingredientsAdapter.updateIngredients(state.portionsCount)
+
+            if (!isInitRecyclers) {
+                initRecycler(requireContext(), binding.rvIngredients, ingredientsAdapter)
+                initRecycler(requireContext(), binding.rvMethod, methodAdapter)
+                isInitRecyclers = true
+            }
+
+            if (!isInitSeekBar) {
+                initSeekBar()
+                isInitSeekBar = true
+            }
 
             with(binding) {
                 ivImage.setImageDrawable(state.recipeImage)
