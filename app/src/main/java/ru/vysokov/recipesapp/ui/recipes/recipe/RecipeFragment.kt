@@ -49,6 +49,8 @@ class RecipeFragment : Fragment() {
 
     private fun initUi(recipeId: Int?) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            if (!state.isLoaded) return@observe
+
             if (!isInitUi) {
                 ingredientsAdapter = IngredientsAdapter(emptyList())
                 methodAdapter = MethodAdapter(emptyList())

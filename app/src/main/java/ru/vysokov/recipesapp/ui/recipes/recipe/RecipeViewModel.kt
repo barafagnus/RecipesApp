@@ -17,6 +17,7 @@ data class RecipeUiState(
     val ingredients: List<Ingredient> = emptyList(),
     val method: List<String> = emptyList(),
     val portionsCount: Int = 1,
+    val isLoaded: Boolean = false
 )
 
 class RecipeViewModel(
@@ -37,7 +38,8 @@ class RecipeViewModel(
             isFavorite = recipeId?.toString() in getFavorites(),
             ingredients = recipe?.ingredients ?: emptyList(),
             method = recipe?.method ?: emptyList(),
-            portionsCount = _uiState.value?.portionsCount ?: 1
+            portionsCount = _uiState.value?.portionsCount ?: 1,
+            isLoaded = recipe != null
         )
     }
 
