@@ -1,6 +1,5 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.RecipeConstants
@@ -23,6 +21,7 @@ class RecipeFragment : Fragment() {
     private val viewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientsAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
+    private var isInitUi = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,18 +34,10 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val recipeId = getRecipeIdFromBundle()
-        viewModel.loadRecipe(recipeId)
-
-        ingredientsAdapter = IngredientsAdapter(emptyList())
-        methodAdapter = MethodAdapter(emptyList())
-
-        initRecycler(view.context, binding.rvIngredients, ingredientsAdapter)
-        initSeekBar(ingredientsAdapter)
-        initRecycler(view.context, binding.rvMethod, methodAdapter)
 
         initUi(recipeId)
+        viewModel.loadRecipe(recipeId)
     }
 
     private fun getRecipeIdFromBundle(): Int? {
@@ -56,8 +47,66 @@ class RecipeFragment : Fragment() {
 
     private fun initUi(recipeId: Int?) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            if (!state.isLoaded) return@observe
+
+            if (!isInitUi) {
+                ingredientsAdapter = IngredientsAdapter(emptyList())
+                methodAdapter = MethodAdapter(emptyList())
+
+                with(binding.rvIngredients) {
+                    layoutManager = LinearLayoutManager(requireContext())
+                    adapter = ingredientsAdapter
+                    isNestedScrollingEnabled = false
+                    setHasFixedSize(false)
+
+                    addItemDecoration(
+                        MaterialDividerItemDecoration(
+                            requireContext(),
+                            MaterialDividerItemDecoration.VERTICAL
+                        ).apply {
+                            dividerColor = ContextCompat.getColor(context, R.color.divider_color)
+                            isLastItemDecorated = false
+                        }
+                    )
+                }
+
+                binding.sbNumberOfPortions.setOnSeekBarChangeListener(object :
+                    SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        progress: Int,
+                        fromUser: Boolean
+                    ) {
+                        viewModel.updatePortion(progress)
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                })
+
+                with(binding.rvMethod) {
+                    layoutManager = LinearLayoutManager(requireContext())
+                    adapter = methodAdapter
+                    isNestedScrollingEnabled = false
+                    setHasFixedSize(false)
+
+                    addItemDecoration(
+                        MaterialDividerItemDecoration(
+                            requireContext(),
+                            MaterialDividerItemDecoration.VERTICAL
+                        ).apply {
+                            dividerColor = ContextCompat.getColor(context, R.color.divider_color)
+                            isLastItemDecorated = false
+                        }
+                    )
+                }
+                isInitUi = true
+            }
+
             ingredientsAdapter.updateDataSet(state.ingredients)
             methodAdapter.updateDataSet(state.method)
+            ingredientsAdapter.updateIngredients(state.portionsCount)
 
             with(binding) {
                 ivImage.setImageDrawable(state.recipeImage)
@@ -68,6 +117,8 @@ class RecipeFragment : Fragment() {
                 ibToFavorites.setOnClickListener {
                     viewModel.onFavoritesClicked(recipeId)
                 }
+
+                numberOfPortions.text = state.portionsCount.toString()
             }
         }
     }
@@ -77,48 +128,6 @@ class RecipeFragment : Fragment() {
         binding.ibToFavorites.setImageDrawable(
             ContextCompat.getDrawable(requireContext(), iconRes)
         )
-    }
-
-    private fun initRecycler(
-        context: Context,
-        recyclerView: RecyclerView,
-        adapter: RecyclerView.Adapter<*>
-    ) {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
-        recyclerView.isNestedScrollingEnabled = false
-        recyclerView.setHasFixedSize(false)
-        addDivider(context, recyclerView)
-    }
-
-    private fun initSeekBar(adapter: IngredientsAdapter) {
-        binding.sbNumberOfPortions.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seekBar: SeekBar?,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                adapter.updateIngredients(progress)
-                binding.numberOfPortions.text = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-    }
-
-    private fun addDivider(context: Context, recyclerView: RecyclerView) {
-        val divider = MaterialDividerItemDecoration(
-            context,
-            MaterialDividerItemDecoration.VERTICAL
-        )
-        with(divider) {
-            dividerColor = ContextCompat.getColor(context, R.color.divider_color)
-            isLastItemDecorated = false
-        }
-        recyclerView.addItemDecoration(divider)
     }
 
     override fun onDestroyView() {

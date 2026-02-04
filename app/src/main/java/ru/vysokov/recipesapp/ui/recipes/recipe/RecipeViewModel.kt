@@ -12,12 +12,12 @@ import ru.vysokov.recipesapp.model.Ingredient
 
 data class RecipeUiState(
     val title: String = "",
-    val imageUrl: String? = null,
     val recipeImage: Drawable? = null,
     val isFavorite: Boolean = false,
     val ingredients: List<Ingredient> = emptyList(),
     val method: List<String> = emptyList(),
     val portionsCount: Int = 1,
+    val isLoaded: Boolean = false
 )
 
 class RecipeViewModel(
@@ -33,13 +33,13 @@ class RecipeViewModel(
         val drawable = AssetLoader.loadAssets(context, recipe?.imageUrl)
 
         _uiState.value = _uiState.value?.copy(
-            title = recipe?.title ?: "",
-            imageUrl = recipe?.imageUrl ?: "",
+            title = recipe?.title.orEmpty(),
             recipeImage = drawable,
             isFavorite = recipeId?.toString() in getFavorites(),
             ingredients = recipe?.ingredients ?: emptyList(),
             method = recipe?.method ?: emptyList(),
-            portionsCount = _uiState.value?.portionsCount ?: 1
+            portionsCount = _uiState.value?.portionsCount ?: 1,
+            isLoaded = recipe != null
         )
     }
 
@@ -58,6 +58,12 @@ class RecipeViewModel(
 
         _uiState.value = _uiState.value?.copy(
             isFavorite = isFavorite
+        )
+    }
+
+    fun updatePortion(portionsCount: Int) {
+        _uiState.value = _uiState.value?.copy(
+            portionsCount = portionsCount
         )
     }
 
