@@ -70,20 +70,11 @@ class RecipeFragment : Fragment() {
                     )
                 }
 
-                binding.sbNumberOfPortions.setOnSeekBarChangeListener(object :
-                    SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(
-                        seekBar: SeekBar?,
-                        progress: Int,
-                        fromUser: Boolean
-                    ) {
+                binding.sbNumberOfPortions.setOnSeekBarChangeListener(
+                    PortionSeekBarListener { progress ->
                         viewModel.updatePortion(progress)
                     }
-
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-                })
+                )
 
                 with(binding.rvMethod) {
                     layoutManager = LinearLayoutManager(requireContext())
@@ -96,7 +87,8 @@ class RecipeFragment : Fragment() {
                             requireContext(),
                             MaterialDividerItemDecoration.VERTICAL
                         ).apply {
-                            dividerColor = ContextCompat.getColor(context, R.color.divider_color)
+                            dividerColor =
+                                ContextCompat.getColor(context, R.color.divider_color)
                             isLastItemDecorated = false
                         }
                     )
@@ -104,9 +96,9 @@ class RecipeFragment : Fragment() {
                 isInitUi = true
             }
 
-            ingredientsAdapter.updateDataSet(state.ingredients)
-            methodAdapter.updateDataSet(state.method)
-            ingredientsAdapter.updateIngredients(state.portionsCount)
+            ingredientsAdapter.dataSet = state.ingredients
+            methodAdapter.dataSet = state.method
+            ingredientsAdapter.quantity = state.portionsCount
 
             with(binding) {
                 ivImage.setImageDrawable(state.recipeImage)
@@ -133,5 +125,24 @@ class RecipeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        isInitUi = false
     }
+}
+
+class PortionSeekBarListener(
+    private val onChangeIngredients: (Int) -> Unit
+) : SeekBar.OnSeekBarChangeListener {
+
+    override fun onProgressChanged(
+        seekBar: SeekBar?,
+        progress: Int,
+        fromUser: Boolean
+    ) {
+        onChangeIngredients(progress)
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+
 }

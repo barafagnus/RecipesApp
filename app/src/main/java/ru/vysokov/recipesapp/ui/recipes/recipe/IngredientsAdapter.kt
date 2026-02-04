@@ -8,9 +8,19 @@ import ru.vysokov.recipesapp.databinding.ItemIngredientBinding
 import ru.vysokov.recipesapp.model.Ingredient
 
 class IngredientsAdapter(
-    private var dataSet: List<Ingredient>
+    dataSet: List<Ingredient>
 ) : RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
-    private var quantity: Int = 1
+    var dataSet: List<Ingredient> = dataSet
+        get() = field
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+    var quantity: Int = 1
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class ViewHolder(
         binding: ItemIngredientBinding
@@ -35,16 +45,6 @@ class IngredientsAdapter(
     }
 
     override fun getItemCount(): Int = dataSet.size
-
-    fun updateIngredients(progress: Int) {
-        quantity = progress
-        notifyDataSetChanged()
-    }
-
-    fun updateDataSet(newDataSet: List<Ingredient>) {
-        dataSet = newDataSet
-        notifyDataSetChanged()
-    }
 
     private fun convertQuantity(ingredientQuantity: String, sbQuantity: Int): String {
         val value = ingredientQuantity.toBigDecimalOrNull() ?: return ""
