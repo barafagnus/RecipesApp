@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.CategoryConstants
 import ru.vysokov.recipesapp.core.RecipeConstants
-import ru.vysokov.recipesapp.data.repository.STUB
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
 import ru.vysokov.recipesapp.ui.recipes.recipe.RecipeFragment
@@ -22,6 +22,8 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImage: String? = null
+    private val viewModel: RecipesListViewModel by viewModels()
+    lateinit var recipesListAdapter: RecipesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,15 +49,14 @@ class RecipesListFragment : Fragment() {
                 tvRecipesTitle.text = categoryName
             }
 
-            initRecycler(categoryId)
+            initRecycler()
+            viewModel.loadRecipes(categoryId)
         }
     }
 
-    private fun initRecycler(categoryId: Int?) {
-        val dataset = STUB.getRecipesByCategoryId(categoryId)
-        val recipesListAdapter = RecipesListAdapter(dataset)
-        val recipesListRecyclerView = binding.rvRecipes
-        recipesListRecyclerView.adapter = recipesListAdapter
+    private fun initRecycler() {
+        recipesListAdapter = RecipesListAdapter(emptyList())
+        binding.rvRecipes.adapter = recipesListAdapter
 
         recipesListAdapter.setOnItemClickListener(
             object : RecipesListAdapter.OnItemClickListener {
@@ -64,6 +65,12 @@ class RecipesListFragment : Fragment() {
                 }
             }
         )
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            if (!state.isLoaded) return@observe
+
+            recipesListAdapter.dataSet = state.recipe
+        }
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
