@@ -11,8 +11,14 @@ import ru.vysokov.recipesapp.databinding.ItemCategoryBinding
 import ru.vysokov.recipesapp.model.Category
 
 class CategoriesListAdapter(
-    private val dataSet: List<Category>
+    dataSet: List<Category>
 ) : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+    var dataSet: List<Category> = dataSet
+        get() = field
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var itemClickListener: OnItemClickListener? = null
 

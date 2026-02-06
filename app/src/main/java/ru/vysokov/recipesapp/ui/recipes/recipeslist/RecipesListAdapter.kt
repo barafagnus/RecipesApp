@@ -8,8 +8,14 @@ import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.ItemRecipeBinding
 import ru.vysokov.recipesapp.model.Recipe
 
-class RecipesListAdapter(private val dataSet: List<Recipe>) :
+class RecipesListAdapter(dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
+    var dataSet: List<Recipe> = dataSet
+        get() = field
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var itemClickListener: OnItemClickListener? = null
 

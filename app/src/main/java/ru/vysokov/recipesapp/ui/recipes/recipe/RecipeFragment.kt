@@ -46,13 +46,13 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUi(recipeId: Int?) {
+        ingredientsAdapter = IngredientsAdapter(emptyList())
+        methodAdapter = MethodAdapter(emptyList())
+
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             if (!state.isLoaded) return@observe
 
             if (!isInitUi) {
-                ingredientsAdapter = IngredientsAdapter(emptyList())
-                methodAdapter = MethodAdapter(emptyList())
-
                 with(binding.rvIngredients) {
                     layoutManager = LinearLayoutManager(requireContext())
                     adapter = ingredientsAdapter
