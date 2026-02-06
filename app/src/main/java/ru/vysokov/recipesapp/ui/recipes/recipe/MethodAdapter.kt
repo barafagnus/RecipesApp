@@ -7,8 +7,15 @@ import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.databinding.ItemMethodBinding
 
 class MethodAdapter(
-    private var dataSet: List<String>
+    dataSet: List<String>
 ) : RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
+
+    var dataSet: List<String> = dataSet
+        get() = field
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class ViewHolder(
         binding: ItemMethodBinding
@@ -28,9 +35,4 @@ class MethodAdapter(
     }
 
     override fun getItemCount(): Int = dataSet.size
-
-    fun updateDataSet(newDataSet: List<String>) {
-        dataSet = newDataSet
-        notifyDataSetChanged()
-    }
 }
