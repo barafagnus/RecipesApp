@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.CategoryConstants
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
-import ru.vysokov.recipesapp.ui.recipes.recipeslist.RecipesListFragment
 
 class CategoriesListFragment : Fragment() {
     private var _binding: FragmentListCategoriesBinding? = null
@@ -21,6 +19,7 @@ class CategoriesListFragment : Fragment() {
         get() = _binding ?: throw IllegalStateException()
     private val viewModel: CategoriesListViewModel by viewModels()
     private lateinit var categoriesListAdapter: CategoriesListAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,10 +74,6 @@ class CategoriesListFragment : Fragment() {
             CategoryConstants.ARG_CATEGORY_IMAGE_URL to categoryImageUrl
         )
 
-        parentFragmentManager.commit {
-            replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
-            setReorderingAllowed(true)
-            addToBackStack(null)
-        }
+        findNavController().navigate(R.id.recipesListFragment, bundle)
     }
 }
