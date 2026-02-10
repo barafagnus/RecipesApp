@@ -8,11 +8,13 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ru.vysokov.recipesapp.ui.recipes.favorites.FavoritesFragment"
-        android:label="FavoritesFragment" />
+        android:label="FavoritesFragment"
+        tools:layout="@layout/fragment_favorites"/>
     <fragment
         android:id="@+id/recipeFragment"
         android:name="ru.vysokov.recipesapp.ui.recipes.recipe.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment"
+        tools:layout="@layout/fragment_recipe"/>
     <fragment
         android:id="@+id/categoriesListFragment"
         android:name="ru.vysokov.recipesapp.ui.categories.CategoriesListFragment"
