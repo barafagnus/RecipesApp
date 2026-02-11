@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.core.CategoryConstants
-import ru.vysokov.recipesapp.core.RecipeConstants
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
 
@@ -72,9 +70,8 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val bundle = Bundle()
-        bundle.putInt(RecipeConstants.ARG_RECIPE_ID, recipeId)
-        findNavController().navigate(R.id.recipeFragment, bundle)
+        val action = RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
