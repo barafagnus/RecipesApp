@@ -1,14 +1,19 @@
 package ru.vysokov.recipesapp.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
+import kotlinx.serialization.json.Json
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
+import ru.vysokov.recipesapp.model.Category
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -26,7 +31,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val navOptions = navOptions {
             anim {
@@ -48,6 +54,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        Log.i("!!!", "Метод onCreate выполняется на потоке: ${Thread.currentThread().name}")
+
+        val thread = Thread {
+            val url = URL("https://recipes.androidsprint.ru/api/category")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+
+            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+            Log.i("!!!", "code: ${connection.responseCode}")
+            Log.i("!!!", "msg: ${connection.responseMessage}")
+
+            val raw = connection.inputStream.bufferedReader().readText()
+            Log.i("!!!", "body: $raw")
+
+            val categories = Json.decodeFromString<List<Category>>(raw)
+            categories.forEach { Log.i("!!!", "object: ${it}") }
+        }
+
+        thread.start()
     }
 
     override fun onDestroy() {

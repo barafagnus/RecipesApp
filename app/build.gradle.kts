@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -56,4 +57,5 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     androidTestImplementation(libs.androidx.navigation.testing)
+    implementation(libs.kotlinx.serialization.json)
 }
