@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.core.CategoryConstants
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
 
 class CategoriesListFragment : Fragment() {
@@ -66,14 +63,11 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
         val category = viewModel.uiState.value?.categories?.find { it.id == categoryId }
-        val categoryName = category?.title
-        val categoryImageUrl = category?.imageUrl
-        val bundle = bundleOf(
-            CategoryConstants.ARG_CATEGORY_ID to categoryId,
-            CategoryConstants.ARG_CATEGORY_NAME to categoryName,
-            CategoryConstants.ARG_CATEGORY_IMAGE_URL to categoryImageUrl
-        )
-
-        findNavController().navigate(R.id.recipesListFragment, bundle)
+            ?: throw IllegalArgumentException()
+        val action =
+            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment(
+                category
+            )
+        findNavController().navigate(action)
     }
 }

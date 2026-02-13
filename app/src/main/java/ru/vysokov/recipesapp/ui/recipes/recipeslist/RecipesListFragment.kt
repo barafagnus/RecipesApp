@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import ru.vysokov.recipesapp.core.CategoryConstants
+import androidx.navigation.fragment.navArgs
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
 
@@ -20,6 +20,7 @@ class RecipesListFragment : Fragment() {
     private var categoryImage: String? = null
     private val viewModel: RecipesListViewModel by viewModels()
     lateinit var recipesListAdapter: RecipesListAdapter
+    private val args: RecipesListFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,21 +34,17 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val bundle = arguments
+        categoryId = args.category?.id
+        categoryName = args.category?.title
+        categoryImage = args.category?.imageUrl
 
-        bundle?.let {
-            categoryId = bundle.getInt(CategoryConstants.ARG_CATEGORY_ID, 0)
-            categoryName = bundle.getString(CategoryConstants.ARG_CATEGORY_NAME)
-            categoryImage = bundle.getString(CategoryConstants.ARG_CATEGORY_IMAGE_URL)
-
-            with(binding) {
-                ivRecipes.setImageDrawable(AssetLoader.loadAssets(view.context, categoryImage))
-                tvRecipesTitle.text = categoryName
-            }
-
-            initRecycler()
-            viewModel.loadRecipes(categoryId)
+        with(binding) {
+            ivRecipes.setImageDrawable(AssetLoader.loadAssets(view.context, categoryImage))
+            tvRecipesTitle.text = categoryName
         }
+
+        initRecycler()
+        viewModel.loadRecipes(categoryId)
     }
 
     private fun initRecycler() {

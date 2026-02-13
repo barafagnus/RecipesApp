@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
 
@@ -27,14 +28,23 @@ class MainActivity : AppCompatActivity() {
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        val navOptions = navOptions {
+            anim {
+                enter = androidx.navigation.ui.R.anim.nav_default_enter_anim
+                exit = androidx.navigation.ui.R.anim.nav_default_exit_anim
+                popEnter = androidx.navigation.ui.R.anim.nav_default_pop_enter_anim
+                popExit = androidx.navigation.ui.R.anim.nav_default_exit_anim
+            }
+            launchSingleTop = true
+        }
 
         with(binding) {
             btnCategories.setOnClickListener {
-                navController.navigate(R.id.categoriesListFragment)
+                navController.navigate(R.id.categoriesListFragment, null, navOptions)
             }
 
             btnFavorites.setOnClickListener {
-                navController.navigate(R.id.favoritesFragment)
+                navController.navigate(R.id.favoritesFragment, null, navOptions)
             }
         }
 
