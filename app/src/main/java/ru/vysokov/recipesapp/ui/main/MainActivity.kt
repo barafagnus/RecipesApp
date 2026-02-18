@@ -8,17 +8,24 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
-import kotlinx.serialization.json.Json
 import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
-import ru.vysokov.recipesapp.model.Category
-import java.net.HttpURLConnection
-import java.net.URL
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
+    private val threadPool = ThreadPoolExecutor(
+        10,
+        10,
+        60L,
+        TimeUnit.SECONDS,
+        LinkedBlockingQueue()
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,25 +61,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Log.i("!!!", "Метод onCreate выполняется на потоке: ${Thread.currentThread().name}")
+        with(threadPool) {
+            execute {
+                Log.i("!!!", "Thread: ${Thread.currentThread().name}")
+                try {
+                    val recipesRepository = RecipesRepository()
+                    val categories = recipesRepository.getCategories()
 
-        val thread = Thread {
-            val url = URL("https://recipes.androidsprint.ru/api/category")
-            val connection = url.openConnection() as HttpURLConnection
-            connection.connect()
-
-            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-            Log.i("!!!", "code: ${connection.responseCode}")
-            Log.i("!!!", "msg: ${connection.responseMessage}")
-
-            val raw = connection.inputStream.bufferedReader().readText()
-            Log.i("!!!", "body: $raw")
-
-            val categories = Json.decodeFromString<List<Category>>(raw)
-            categories.forEach { Log.i("!!!", "object: ${it}") }
+                    categories.forEach { category ->
+                        execute {
+                            try {
+                                val recipes = recipesRepository.getRecipes(category.id)
+                                Log.i("!!!", "${Thread.currentThread().name} Recipe: $recipes")
+                            } catch (e: Exception) {
+                                Log.e("!!!", "Get recipe from network error: ${e.message}")
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("!!!", "Get categories from network error: ${e.message}")
+                }
+            }
         }
-
-        thread.start()
     }
 
     override fun onDestroy() {
