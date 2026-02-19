@@ -1,7 +1,6 @@
 package ru.vysokov.recipesapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,23 +8,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.ActivityMainBinding
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
-    private val threadPool = ThreadPoolExecutor(
-        10,
-        10,
-        60L,
-        TimeUnit.SECONDS,
-        LinkedBlockingQueue()
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,27 +49,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        with(threadPool) {
-            execute {
-                Log.i("!!!", "Thread: ${Thread.currentThread().name}")
-                try {
-                    val recipesRepository = RecipesRepository()
-                    val categories = recipesRepository.getCategories()
-
-                    categories.forEach { category ->
-                        execute {
-                            try {
-                                val recipes = recipesRepository.getRecipes(category.id)
-                            } catch (e: Exception) {
-                                Log.e("!!!", "Get recipe from network error: ${e.message}")
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("!!!", "Get categories from network error: ${e.message}")
-                }
-            }
-        }
+//        with(threadPool) {
+//            execute {
+//                Log.i("!!!", "Thread: ${Thread.currentThread().name}")
+//                try {
+//                    val recipesRepository = RecipesRepository()
+//                    val categories = recipesRepository.getCategories()
+//
+//                    categories.forEach { category ->
+//                        execute {
+//                            try {
+//                                val recipes = recipesRepository.getRecipes(category.id)
+//                            } catch (e: Exception) {
+//                                Log.e("!!!", "Get recipe from network error: ${e.message}")
+//                            }
+//                        }
+//                    }
+//                } catch (e: Exception) {
+//                    Log.e("!!!", "Get categories from network error: ${e.message}")
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {

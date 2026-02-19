@@ -11,4 +11,5 @@
     <string name="portions">Порции:</string>
     <string name="method">Способ приготовления</string>
     <string name="emptyFavorites">Вы еще не добавили ни одного рецепта в избранное</string>
+    <string name="networkError">Ошибка получения данных</string>
 </resources>

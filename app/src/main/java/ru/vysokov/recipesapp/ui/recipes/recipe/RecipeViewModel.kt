@@ -5,7 +5,8 @@ import android.graphics.drawable.Drawable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.vysokov.recipesapp.data.repository.STUB
+import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
@@ -21,26 +22,32 @@ data class RecipeUiState(
 )
 
 class RecipeViewModel(
+    private val repository: RecipesRepository,
     application: Application
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
     private val _uiState = MutableLiveData(RecipeUiState())
     val uiState: LiveData<RecipeUiState> get() = _uiState
     private val context = getApplication<Application>()
 
-    // TODO: load from network
-    fun loadRecipe(recipeId: Int?) {
-        val recipe = STUB.getRecipeById(recipeId)
-        val drawable = AssetLoader.loadAssets(context, recipe?.imageUrl)
+    private val _errorEvent = MutableLiveData<Int>()
+    val errorEvent: LiveData<Int> get() = _errorEvent
 
-        _uiState.value = _uiState.value?.copy(
-            title = recipe?.title.orEmpty(),
-            recipeImage = drawable,
-            isFavorite = recipeId?.toString() in getFavorites(),
-            ingredients = recipe?.ingredients ?: emptyList(),
-            method = recipe?.method ?: emptyList(),
-            portionsCount = _uiState.value?.portionsCount ?: 1,
-            isLoaded = recipe != null
-        )
+    // TODO: load from network
+    fun loadRecipe(recipeId: Int) {
+        repository.getRecipeById(recipeId) { recipe ->
+            if (recipe == null) _errorEvent.postValue(R.string.networkError)
+            else _uiState.postValue(
+                _uiState.value?.copy(
+                    title = recipe.title,
+                    recipeImage = AssetLoader.loadAssets(context, recipe.imageUrl),
+                    isFavorite = recipeId.toString() in getFavorites(),
+                    ingredients = recipe.ingredients,
+                    method = recipe.method,
+                    portionsCount = _uiState.value?.portionsCount ?: 1,
+                    isLoaded = recipe != null
+                )
+            )
+        }
     }
 
     fun onFavoritesClicked(recipeId: Int?) {

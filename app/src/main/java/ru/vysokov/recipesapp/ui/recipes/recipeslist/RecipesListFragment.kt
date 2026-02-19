@@ -4,12 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
+
+class RecipesListViewModelFactory(
+    private val repository: RecipesRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return RecipesListViewModel(repository) as T
+    }
+}
 
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesListBinding? = null
@@ -18,7 +32,11 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImage: String? = null
-    private val viewModel: RecipesListViewModel by viewModels()
+    private val viewModel: RecipesListViewModel by viewModels {
+        RecipesListViewModelFactory(
+            RecipesRepository(NetworkClient.recipesService)
+        )
+    }
     lateinit var recipesListAdapter: RecipesListAdapter
     private val args: RecipesListFragmentArgs by navArgs()
 
@@ -64,10 +82,15 @@ class RecipesListFragment : Fragment() {
 
             recipesListAdapter.dataSet = state.recipe
         }
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(context, getString(errorMessage), Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val action = RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        val action =
+            RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
         findNavController().navigate(action)
     }
 

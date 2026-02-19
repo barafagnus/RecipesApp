@@ -3,7 +3,8 @@ package ru.vysokov.recipesapp.ui.recipes.recipeslist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.vysokov.recipesapp.data.repository.STUB
+import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.model.Recipe
 
 data class RecipesListUiState(
@@ -11,16 +12,24 @@ data class RecipesListUiState(
     val isLoaded: Boolean = false,
 )
 
-class RecipesListViewModel(): ViewModel() {
+class RecipesListViewModel(
+    private val repository: RecipesRepository
+) : ViewModel() {
     private val _uiState = MutableLiveData(RecipesListUiState())
     val uiState: LiveData<RecipesListUiState> get() = _uiState
 
-    fun loadRecipes(categoryId: Int?) {
-        val dataset = STUB.getRecipesByCategoryId(categoryId)
+    private val _errorEvent = MutableLiveData<Int>()
+    val errorEvent: LiveData<Int> get() = _errorEvent
 
-        _uiState.value = _uiState.value?.copy(
-            recipe = dataset,
-            isLoaded = true
-        )
+    fun loadRecipes(categoryId: Int?) {
+        repository.getRecipesByCategory(categoryId) { recipes ->
+            if (recipes == null) _errorEvent.postValue(R.string.networkError)
+            else _uiState.postValue(
+                _uiState.value?.copy(
+                    recipe = recipes,
+                    isLoaded = true
+                )
+            )
+        }
     }
 }

@@ -1,28 +1,50 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
+
+class RecipeFragmentViewModelFactory(
+    private val repository: RecipesRepository,
+    private val application: Application
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return RecipeViewModel(repository, application) as T
+    }
+}
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
-    private val viewModel: RecipeViewModel by viewModels()
     private lateinit var ingredientsAdapter: IngredientsAdapter
     private lateinit var methodAdapter: MethodAdapter
     private var isInitUi = false
     private val args: RecipeFragmentArgs by navArgs()
+
+    private val viewModel: RecipeViewModel by viewModels {
+        RecipeFragmentViewModelFactory(
+            RecipesRepository(NetworkClient.recipesService),
+            requireActivity().application
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,6 +130,10 @@ class RecipeFragment : Fragment() {
 
                 numberOfPortions.text = state.portionsCount.toString()
             }
+        }
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(context, getString(errorMessage), Toast.LENGTH_LONG).show()
         }
     }
 
