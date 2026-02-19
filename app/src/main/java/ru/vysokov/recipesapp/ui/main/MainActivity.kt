@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
                         execute {
                             try {
                                 val recipes = recipesRepository.getRecipes(category.id)
-                                Log.i("!!!", "${Thread.currentThread().name} Recipe: $recipes")
                             } catch (e: Exception) {
                                 Log.e("!!!", "Get recipe from network error: ${e.message}")
                             }

@@ -6,11 +6,11 @@ import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
 
 
-class RecipesRepository() {
+class RecipesRepository {
     fun getCategories(): List<Category> {
         return try {
             val raw = RecipesApi.getNetworkData("https://recipes.androidsprint.ru/api/category")
-            return Json.decodeFromString<List<Category>>(raw)
+            Json.decodeFromString<List<Category>>(raw)
         } catch (e: Exception) {
             emptyList()
         }
@@ -21,7 +21,7 @@ class RecipesRepository() {
         return try {
             val raw =
                 RecipesApi.getNetworkData("https://recipes.androidsprint.ru/api/category/${id}/recipes")
-            return Json.decodeFromString<List<Recipe>>(raw)
+            Json.decodeFromString<List<Recipe>>(raw)
         } catch (e: Exception) {
             emptyList()
         }

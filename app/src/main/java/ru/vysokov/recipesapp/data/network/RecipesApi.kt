@@ -1,16 +1,23 @@
 package ru.vysokov.recipesapp.data.network
 
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RecipesApi {
-    fun getNetworkData(url: String): String {
-        val url = URL(url)
-        val connection = url.openConnection() as HttpURLConnection
-        return try {
-            connection.inputStream.bufferedReader().use { it.readText() }
-        } finally {
-            connection.disconnect()
+    private val client =
+        OkHttpClient.Builder()
+            .addNetworkInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
+    fun getNetworkData(urlString: String): String {
+        val request = Request.Builder().url(urlString).build()
+
+        return client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) ""
+            else response.body.string()
         }
     }
 }
