@@ -48,28 +48,6 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.favoritesFragment, null, navOptions)
             }
         }
-
-//        with(threadPool) {
-//            execute {
-//                Log.i("!!!", "Thread: ${Thread.currentThread().name}")
-//                try {
-//                    val recipesRepository = RecipesRepository()
-//                    val categories = recipesRepository.getCategories()
-//
-//                    categories.forEach { category ->
-//                        execute {
-//                            try {
-//                                val recipes = recipesRepository.getRecipes(category.id)
-//                            } catch (e: Exception) {
-//                                Log.e("!!!", "Get recipe from network error: ${e.message}")
-//                            }
-//                        }
-//                    }
-//                } catch (e: Exception) {
-//                    Log.e("!!!", "Get categories from network error: ${e.message}")
-//                }
-//            }
-//        }
     }
 
     override fun onDestroy() {

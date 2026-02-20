@@ -3,8 +3,9 @@ package ru.vysokov.recipesapp.ui.recipes.recipeslist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.utils.AssetLoader
+import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.databinding.ItemRecipeBinding
 import ru.vysokov.recipesapp.model.Recipe
 
@@ -43,20 +44,18 @@ class RecipesListAdapter(dataSet: List<Recipe>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val recipe = dataSet[position]
-        with(viewHolder) {
-            ivRecipeCard.setImageDrawable(
-                AssetLoader.loadAssets(
-                    viewHolder.itemView.context,
-                    recipe.imageUrl
-                )
-            )
-            ivRecipeCardTitle.text = recipe.title
-        }
+        val imageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}"
+
+        Glide.with(viewHolder.itemView.context)
+            .load(imageUrl)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(viewHolder.ivRecipeCard)
+        viewHolder.ivRecipeCardTitle.text = recipe.title
 
         viewHolder.itemView.setOnClickListener {
             itemClickListener?.onItemClick(recipe.id)
         }
-
     }
 
     override fun getItemCount() = dataSet.size

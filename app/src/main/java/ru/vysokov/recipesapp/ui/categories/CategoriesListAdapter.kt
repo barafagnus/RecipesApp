@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.utils.AssetLoader
+import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.databinding.ItemCategoryBinding
 import ru.vysokov.recipesapp.model.Category
 
@@ -46,10 +47,15 @@ class CategoriesListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val category = dataSet[position]
-        val drawable = AssetLoader.loadAssets(viewHolder.itemView.context, category.imageUrl)
+        val imageUrl = "${NetworkClient.URL_IMAGES}${category.imageUrl}"
+
+        Glide.with(viewHolder.itemView.context)
+            .load(imageUrl)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(viewHolder.ivCategoryCard)
 
         with(viewHolder) {
-            ivCategoryCard.setImageDrawable(drawable)
             tvCardTitle.text = category.title
             tvCardDescription.text = category.description
         }

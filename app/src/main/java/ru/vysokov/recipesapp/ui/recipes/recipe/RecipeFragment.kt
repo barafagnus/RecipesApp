@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.network.NetworkClient
@@ -118,8 +119,16 @@ class RecipeFragment : Fragment() {
             methodAdapter.dataSet = state.method
             ingredientsAdapter.quantity = state.portionsCount
 
+            if (binding.ivImage.tag != state.recipeImageUrl) {
+                Glide.with(requireContext())
+                    .load(state.recipeImageUrl)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.img_error)
+                    .into(binding.ivImage)
+                binding.ivImage.tag = state.recipeImageUrl
+            }
+
             with(binding) {
-                ivImage.setImageDrawable(state.recipeImage)
                 tvTitle.text = state.title
 
                 updateFavoriteIcon(state.isFavorite)

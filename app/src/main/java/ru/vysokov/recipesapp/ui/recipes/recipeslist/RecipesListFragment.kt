@@ -11,9 +11,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
-import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
 
 class RecipesListViewModelFactory(
@@ -55,11 +56,14 @@ class RecipesListFragment : Fragment() {
         categoryId = args.category?.id
         categoryName = args.category?.title
         categoryImage = args.category?.imageUrl
+        val imageUrl = "${NetworkClient.URL_IMAGES}${categoryImage}"
 
-        with(binding) {
-            ivRecipes.setImageDrawable(AssetLoader.loadAssets(view.context, categoryImage))
-            tvRecipesTitle.text = categoryName
-        }
+        Glide.with(requireContext())
+            .load(imageUrl)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(binding.ivRecipes)
+        binding.tvRecipesTitle.text = categoryName
 
         initRecycler()
         viewModel.loadRecipes(categoryId)
