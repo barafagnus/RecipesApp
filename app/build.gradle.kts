@@ -4,6 +4,7 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -61,4 +62,6 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.glide)
+    ksp(libs.glide.compiler)
 }

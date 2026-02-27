@@ -1,19 +1,18 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
 import android.app.Application
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
-import ru.vysokov.recipesapp.data.utils.AssetLoader
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
 
 data class RecipeUiState(
     val title: String = "",
-    val recipeImage: Drawable? = null,
+    val recipeImageUrl: String = "",
     val isFavorite: Boolean = false,
     val ingredients: List<Ingredient> = emptyList(),
     val method: List<String> = emptyList(),
@@ -39,12 +38,12 @@ class RecipeViewModel(
             else _uiState.postValue(
                 _uiState.value?.copy(
                     title = recipe.title,
-                    recipeImage = AssetLoader.loadAssets(context, recipe.imageUrl),
+                    recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
                     isFavorite = recipeId.toString() in getFavorites(),
                     ingredients = recipe.ingredients,
                     method = recipe.method,
                     portionsCount = _uiState.value?.portionsCount ?: 1,
-                    isLoaded = recipe != null
+                    isLoaded = true
                 )
             )
         }

@@ -7,8 +7,9 @@ import retrofit2.Retrofit
 
 object NetworkClient {
     private const val BASE_URL = "https://recipes.androidsprint.ru/api/"
+    const val URL_IMAGES = "https://recipes.androidsprint.ru/api/images/"
     private val json = Json { ignoreUnknownKeys = true }
-    val contentType = "application/json".toMediaType()
+    private val contentType = "application/json".toMediaType()
 
     private val retrofit by lazy {
         Retrofit.Builder()
