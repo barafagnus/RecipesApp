@@ -3,6 +3,8 @@ package ru.vysokov.recipesapp.ui.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.model.Category
@@ -23,7 +25,9 @@ class CategoriesListViewModel(
 
     // TODO: load from network
     fun loadCategories() {
-        repository.getCategories { categories ->
+        viewModelScope.launch {
+            val categories = repository.getCategories()
+
             if (categories == null) _errorEvent.postValue(R.string.networkError)
             else _uiState.postValue(
                 _uiState.value?.copy(
@@ -31,7 +35,6 @@ class CategoriesListViewModel(
                     isLoaded = true
                 )
             )
-
         }
     }
 }
