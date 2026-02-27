@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
@@ -35,10 +33,7 @@ class RecipeViewModel(
 
     // TODO: load from network
     fun loadRecipe(recipeId: Int) {
-
-        viewModelScope.launch {
-            val recipe = repository.getRecipeById(recipeId)
-
+        repository.getRecipeById(recipeId) { recipe ->
             if (recipe == null) _errorEvent.postValue(R.string.networkError)
             else _uiState.postValue(
                 _uiState.value?.copy(

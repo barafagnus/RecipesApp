@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
@@ -30,9 +28,7 @@ class FavoritesViewModel(
     // TODO: load from network
     fun loadFavorites() {
         val recipeIds = getFavoritesRecipeIds()
-        viewModelScope.launch {
-            val recipes = repository.getRecipesByIds(recipeIds)
-
+        repository.getRecipesByIds(recipeIds) { recipes ->
             if (recipes == null) _errorEvent.postValue(R.string.networkError)
             else _uiState.postValue(
                 _uiState.value?.copy(
@@ -41,6 +37,8 @@ class FavoritesViewModel(
                 )
             )
         }
+
+
     }
 
     fun getFavoritesRecipeIds(): Set<Int> =

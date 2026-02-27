@@ -1,74 +1,84 @@
 package ru.vysokov.recipesapp.data.repository
 
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ru.vysokov.recipesapp.data.network.RecipeApiService
 import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
+object AppExecutor {
+    val io: ExecutorService = Executors.newFixedThreadPool(10)
+}
 
 class RecipesRepository(
     private val apiService: RecipeApiService
 ) {
 
-    suspend fun getRecipeById(recipeId: Int): Recipe? {
-        return withContext(Dispatchers.IO) {
+    private val io: ExecutorService = AppExecutor.io
+
+    fun getRecipeById(recipeId: Int, onComplete: (Recipe?) -> Unit) {
+        io.execute {
             try {
                 val response = apiService.getRecipeById(recipeId).execute()
-                response.body()
+
+                if (response.isSuccessful) onComplete(response.body())
+                else onComplete(null)
             } catch (e: Exception) {
-                Log.e("!!!", "Network error on get recipe by id")
-                null
+                Log.e("!!!", "Network error on get recipe")
+                onComplete(null)
             }
         }
     }
 
-    suspend fun getRecipesByIds(recipesIds: Set<Int>): List<Recipe>? {
-        return withContext(Dispatchers.IO) {
+    fun getRecipesByIds(recipesIds: Set<Int>, onComplete: (List<Recipe>?) -> Unit) {
+        io.execute {
             try {
                 val response = apiService.getRecipesById(recipesIds).execute()
-                response.body()
+                if (response.isSuccessful) onComplete(response.body())
+                else onComplete(null)
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get recipes list")
-                null
+                onComplete(null)
             }
         }
-
     }
 
-    suspend fun getCategory(categoryId: Int): Category? {
-        return withContext(Dispatchers.IO) {
+    fun getCategory(categoryId: Int, onComplete: (Category?) -> Unit) {
+        io.execute {
             try {
                 val response = apiService.getCategory(categoryId).execute()
-                response.body()
+                if (response.isSuccessful) onComplete(response.body())
+                else onComplete(null)
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get category")
-                null
+                onComplete(null)
             }
         }
     }
 
-    suspend fun getRecipesByCategory(categoryId: Int?): List<Recipe>? {
-        return withContext(Dispatchers.IO) {
+    fun getRecipesByCategory(categoryId: Int?, onComplete: (List<Recipe>?) -> Unit) {
+        io.execute {
             try {
                 val response = apiService.getRecipesByCategory(categoryId).execute()
-                response.body()
+                if (response.isSuccessful) onComplete(response.body())
+                else onComplete(null)
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get recipes list by category")
-                null
+                onComplete(null)
             }
         }
     }
 
-    suspend fun getCategories(): List<Category>? {
-        return withContext(Dispatchers.IO) {
+    fun getCategories(onComplete: (List<Category>?) -> Unit) {
+        io.execute {
             try {
                 val response = apiService.getCategories().execute()
-                response.body()
+                if (response.isSuccessful) onComplete(response.body())
+                else onComplete(null)
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get categories")
-                null
+                onComplete(null)
             }
         }
     }
