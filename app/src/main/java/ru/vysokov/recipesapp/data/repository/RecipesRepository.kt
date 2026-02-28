@@ -27,7 +27,7 @@ class RecipesRepository(
     suspend fun getRecipesByIds(recipesIds: Set<Int>): List<Recipe>? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getRecipesById(recipesIds).execute()
+                val response = apiService.getRecipesById(recipesIds.joinToString(",")).execute()
                 response.body()
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get recipes list")
