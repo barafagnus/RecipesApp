@@ -32,7 +32,7 @@ class CategoriesListFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private lateinit var categoriesListAdapter: CategoriesListAdapter
-    private val databaseClient = DatabaseClient.getInstance(requireContext())
+    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
 
     private val viewModel: CategoriesListViewModel by viewModels {
         CategoriesListViewModelFactory(

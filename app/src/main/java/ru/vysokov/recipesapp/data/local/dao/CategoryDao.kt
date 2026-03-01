@@ -9,8 +9,8 @@ import ru.vysokov.recipesapp.data.local.entities.CategoryEntity
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM categories")
-    fun getAllCategories(): List<CategoryEntity>
+    suspend fun getAllCategories(): List<CategoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllCategories(vararg categories: List<CategoryEntity>)
+    suspend fun insertAllCategories(categories: List<CategoryEntity>)
 }

@@ -2,6 +2,7 @@ package ru.vysokov.recipesapp.data.local
 
 import android.content.Context
 import androidx.room.Room
+import ru.vysokov.recipesapp.core.Database
 
 object DatabaseClient {
     private var instance: AppDatabase? = null
@@ -10,7 +11,7 @@ object DatabaseClient {
         return instance ?: synchronized(this) {
             val db = Room.databaseBuilder(
                 context.applicationContext,
-                AppDatabase::class.java, "database-recipes"
+                AppDatabase::class.java, Database.DB_NAME
             ).build()
             instance = db
             db

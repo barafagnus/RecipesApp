@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.local.DatabaseClient
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
@@ -39,10 +40,11 @@ class RecipeFragment : Fragment() {
     private lateinit var methodAdapter: MethodAdapter
     private var isInitUi = false
     private val args: RecipeFragmentArgs by navArgs()
+    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
 
     private val viewModel: RecipeViewModel by viewModels {
         RecipeFragmentViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService),
+            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
             requireActivity().application
         )
     }

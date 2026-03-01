@@ -27,7 +27,6 @@ class CategoriesListViewModel(
 
     // TODO: load from network
     fun loadCategories() {
-
         viewModelScope.launch {
             val categoriesFromCache = repository.getCategoriesFromCache()
 
@@ -42,8 +41,7 @@ class CategoriesListViewModel(
 
             val networkCategories = repository.getCategories()
 
-            if (networkCategories == null) _errorEvent.postValue(R.string.networkError)
-            else {
+            if (networkCategories != null) {
                 repository.saveCategoriesToCache(networkCategories)
 
                 _uiState.postValue(
@@ -52,6 +50,10 @@ class CategoriesListViewModel(
                         isLoaded = true
                     )
                 )
+            } else {
+                if (categoriesFromCache.isEmpty()) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
             }
         }
     }

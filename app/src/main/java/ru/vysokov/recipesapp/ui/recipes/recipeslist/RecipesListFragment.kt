@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
+import ru.vysokov.recipesapp.data.local.DatabaseClient
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
@@ -33,9 +34,11 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImage: String? = null
+    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
+
     private val viewModel: RecipesListViewModel by viewModels {
         RecipesListViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService)
+            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao())
         )
     }
     lateinit var recipesListAdapter: RecipesListAdapter
