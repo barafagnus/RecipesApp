@@ -37,20 +37,43 @@ class RecipeViewModel(
     fun loadRecipe(recipeId: Int) {
 
         viewModelScope.launch {
-            val recipe = repository.getRecipeById(recipeId)
+            val recipeFromCache = repository.getRecipeFromCache(recipeId)
 
-            if (recipe == null) _errorEvent.postValue(R.string.networkError)
-            else _uiState.postValue(
-                _uiState.value?.copy(
-                    title = recipe.title,
-                    recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
-                    isFavorite = recipeId.toString() in getFavorites(),
-                    ingredients = recipe.ingredients,
-                    method = recipe.method,
-                    portionsCount = _uiState.value?.portionsCount ?: 1,
-                    isLoaded = true
+            recipeFromCache?.let {
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        title = recipeFromCache.title,
+                        recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipeFromCache.imageUrl}",
+                        isFavorite = recipeId.toString() in getFavorites(),
+                        ingredients = recipeFromCache.ingredients,
+                        method = recipeFromCache.method,
+                        portionsCount = _uiState.value?.portionsCount ?: 1,
+                        isLoaded = true
+                    )
                 )
-            )
+            }
+
+            val networkRecipe = repository.getRecipeById(recipeId)
+
+            if (networkRecipe != null) {
+                repository.saveRecipeToCache(networkRecipe)
+
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        title = networkRecipe.title,
+                        recipeImageUrl = "${NetworkClient.URL_IMAGES}${networkRecipe.imageUrl}",
+                        isFavorite = recipeId.toString() in getFavorites(),
+                        ingredients = networkRecipe.ingredients,
+                        method = networkRecipe.method,
+                        portionsCount = _uiState.value?.portionsCount ?: 1,
+                        isLoaded = true
+                    )
+                )
+            } else {
+                if (recipeFromCache == null) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
+            }
         }
     }
 

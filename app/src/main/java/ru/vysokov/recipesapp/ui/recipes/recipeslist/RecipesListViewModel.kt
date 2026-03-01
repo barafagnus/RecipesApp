@@ -25,15 +25,33 @@ class RecipesListViewModel(
 
     fun loadRecipes(categoryId: Int?) {
         viewModelScope.launch {
-            val recipes = repository.getRecipesByCategory(categoryId)
+            val recipesFromCache = repository.getRecipesFromCache()
 
-            if (recipes == null) _errorEvent.postValue(R.string.networkError)
-            else _uiState.postValue(
-                _uiState.value?.copy(
-                    recipe = recipes,
-                    isLoaded = true
+            if (recipesFromCache.isNotEmpty()) {
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        recipe = recipesFromCache,
+                        isLoaded = true
+                    )
                 )
-            )
+            }
+
+            val networkRecipes = repository.getRecipesByCategory(categoryId)
+
+            if (networkRecipes != null) {
+                repository.saveRecipesToCache(networkRecipes)
+
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        recipe = networkRecipes,
+                        isLoaded = true
+                    )
+                )
+            } else {
+                if (recipesFromCache.isEmpty()) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
+            }
         }
     }
 }

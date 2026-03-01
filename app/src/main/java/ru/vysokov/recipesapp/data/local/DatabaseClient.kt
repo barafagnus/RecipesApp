@@ -12,7 +12,9 @@ object DatabaseClient {
             val db = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java, Database.DB_NAME
-            ).build()
+            )
+                .fallbackToDestructiveMigration(true)
+                .build()
             instance = db
             db
         }

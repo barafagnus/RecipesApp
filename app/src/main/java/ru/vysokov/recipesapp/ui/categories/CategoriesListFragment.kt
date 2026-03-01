@@ -36,7 +36,11 @@ class CategoriesListFragment : Fragment() {
 
     private val viewModel: CategoriesListViewModel by viewModels {
         CategoriesListViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
+            RecipesRepository(
+                NetworkClient.recipesService,
+                databaseClient.categoryDao(),
+                databaseClient.recipesDao()
+            ),
             requireActivity().application
         )
     }

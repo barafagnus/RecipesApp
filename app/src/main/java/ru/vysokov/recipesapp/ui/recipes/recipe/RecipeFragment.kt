@@ -44,7 +44,10 @@ class RecipeFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by viewModels {
         RecipeFragmentViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
+            RecipesRepository(
+                NetworkClient.recipesService,
+                databaseClient.categoryDao(),
+                databaseClient.recipesDao()),
             requireActivity().application
         )
     }
