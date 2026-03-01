@@ -63,5 +63,7 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.glide)
+    implementation(libs.room.runtime)
     ksp(libs.glide.compiler)
+    ksp(libs.room.compiler)
 }
