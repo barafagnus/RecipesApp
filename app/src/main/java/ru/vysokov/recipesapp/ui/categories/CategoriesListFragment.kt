@@ -1,5 +1,6 @@
 package ru.vysokov.recipesapp.ui.categories
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +12,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import ru.vysokov.recipesapp.data.local.DatabaseClient
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentListCategoriesBinding
 
 class CategoriesListViewModelFactory(
-    private val repository: RecipesRepository
+    private val repository: RecipesRepository,
+    private val application: Application
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return CategoriesListViewModel(repository) as T
+        return CategoriesListViewModel(application, repository) as T
     }
 }
 
@@ -29,10 +32,12 @@ class CategoriesListFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private lateinit var categoriesListAdapter: CategoriesListAdapter
+    private val databaseClient = DatabaseClient.getInstance(requireContext())
 
     private val viewModel: CategoriesListViewModel by viewModels {
         CategoriesListViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService)
+            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
+            requireActivity().application
         )
     }
 

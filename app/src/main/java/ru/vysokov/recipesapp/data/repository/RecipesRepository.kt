@@ -3,14 +3,45 @@ package ru.vysokov.recipesapp.data.repository
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.vysokov.recipesapp.data.local.dao.CategoryDao
+import ru.vysokov.recipesapp.data.local.entities.CategoryEntity
 import ru.vysokov.recipesapp.data.network.RecipeApiService
 import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
 
 
 class RecipesRepository(
-    private val apiService: RecipeApiService
+    private val apiService: RecipeApiService,
+    private val categoryDao: CategoryDao,
 ) {
+
+    suspend fun getCategoriesFromCache(): List<Category> {
+        return withContext(Dispatchers.IO) {
+            categoryDao.getAllCategories().map { entity ->
+                Category(
+                    id = entity.id,
+                    title = entity.title,
+                    description = entity.description,
+                    imageUrl = entity.imageUrl
+                )
+            }
+        }
+    }
+
+    suspend fun saveCategoriesToCache(categories: List<Category>) {
+        return withContext(Dispatchers.IO) {
+            categoryDao.insertAllCategories(
+                categories.map {
+                    CategoryEntity(
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
+                        imageUrl = it.imageUrl
+                    )
+                }
+            )
+        }
+    }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? {
         return withContext(Dispatchers.IO) {
