@@ -1,8 +1,9 @@
 package ru.vysokov.recipesapp.ui.categories
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
@@ -15,8 +16,9 @@ data class CategoriesUiState(
 )
 
 class CategoriesListViewModel(
+    application: Application,
     private val repository: RecipesRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _uiState = MutableLiveData(CategoriesUiState())
     val uiState: LiveData<CategoriesUiState> get() = _uiState
 
@@ -26,15 +28,33 @@ class CategoriesListViewModel(
     // TODO: load from network
     fun loadCategories() {
         viewModelScope.launch {
-            val categories = repository.getCategories()
+            val categoriesFromCache = repository.getCategoriesFromCache()
 
-            if (categories == null) _errorEvent.postValue(R.string.networkError)
-            else _uiState.postValue(
-                _uiState.value?.copy(
-                    categories = categories,
-                    isLoaded = true
+            if (categoriesFromCache.isNotEmpty()) {
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        categories = categoriesFromCache,
+                        isLoaded = true
+                    )
                 )
-            )
+            }
+
+            val networkCategories = repository.getCategories()
+
+            if (networkCategories != null) {
+                repository.saveCategoriesToCache(networkCategories)
+
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        categories = networkCategories,
+                        isLoaded = true
+                    )
+                )
+            } else {
+                if (categoriesFromCache.isEmpty()) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
+            }
         }
     }
 }

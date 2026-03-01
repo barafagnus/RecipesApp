@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import ru.vysokov.recipesapp.data.local.DatabaseClient
 import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentFavoritesBinding
@@ -31,10 +32,11 @@ class FavoritesFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private lateinit var recipesListAdapter: RecipesListAdapter
+    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
 
     private val viewModel: FavoritesViewModel by viewModels {
         FavoritesFragmentViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService),
+            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
             requireActivity().application
         )
     }
