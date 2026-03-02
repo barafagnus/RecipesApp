@@ -36,7 +36,11 @@ class FavoritesFragment : Fragment() {
 
     private val viewModel: FavoritesViewModel by viewModels {
         FavoritesFragmentViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao()),
+            RecipesRepository(
+                NetworkClient.recipesService,
+                databaseClient.categoryDao(),
+                databaseClient.recipesDao()
+            ),
             requireActivity().application
         )
     }

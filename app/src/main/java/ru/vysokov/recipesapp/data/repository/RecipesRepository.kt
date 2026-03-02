@@ -4,7 +4,9 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vysokov.recipesapp.data.local.dao.CategoryDao
-import ru.vysokov.recipesapp.data.local.entities.CategoryEntity
+import ru.vysokov.recipesapp.data.local.dao.RecipeDao
+import ru.vysokov.recipesapp.data.local.entities.toEntity
+import ru.vysokov.recipesapp.data.local.entities.toModel
 import ru.vysokov.recipesapp.data.network.RecipeApiService
 import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
@@ -13,33 +15,46 @@ import ru.vysokov.recipesapp.model.Recipe
 class RecipesRepository(
     private val apiService: RecipeApiService,
     private val categoryDao: CategoryDao,
+    private val recipeDao: RecipeDao
 ) {
+    suspend fun getRecipesFromCache(): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipeDao.getAllRecipes().map { it.toModel() }
+        }
+    }
+
+    suspend fun getRecipesFromCacheByCategory(categoryId: Int?): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipeDao.getRecipesByCategory(categoryId).map {it.toModel()}
+        }
+    }
+
+    suspend fun saveRecipesToCache(recipes: List<Recipe>, categoryId: Int?) {
+        return withContext(Dispatchers.IO) {
+            recipeDao.insertAllRecipes(recipes.map { it.toEntity(categoryId) })
+        }
+    }
+
+    suspend fun getRecipeFromCache(recipeId: Int): Recipe? {
+        val entity = recipeDao.getRecipeById(recipeId)
+        return entity?.toModel()
+    }
+
+    suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?) {
+        recipeDao.insertRecipe(recipe.toEntity(categoryId))
+
+    }
 
     suspend fun getCategoriesFromCache(): List<Category> {
         return withContext(Dispatchers.IO) {
-            categoryDao.getAllCategories().map { entity ->
-                Category(
-                    id = entity.id,
-                    title = entity.title,
-                    description = entity.description,
-                    imageUrl = entity.imageUrl
-                )
+            categoryDao.getAllCategories().map { it.toModel()
             }
         }
     }
 
     suspend fun saveCategoriesToCache(categories: List<Category>) {
         return withContext(Dispatchers.IO) {
-            categoryDao.insertAllCategories(
-                categories.map {
-                    CategoryEntity(
-                        id = it.id,
-                        title = it.title,
-                        description = it.description,
-                        imageUrl = it.imageUrl
-                    )
-                }
-            )
+            categoryDao.insertAllCategories(categories.map { it.toEntity() })
         }
     }
 

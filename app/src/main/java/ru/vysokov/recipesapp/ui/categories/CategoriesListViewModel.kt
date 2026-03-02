@@ -29,32 +29,27 @@ class CategoriesListViewModel(
     fun loadCategories() {
         viewModelScope.launch {
             val categoriesFromCache = repository.getCategoriesFromCache()
-
-            if (categoriesFromCache.isNotEmpty()) {
-                _uiState.postValue(
-                    _uiState.value?.copy(
-                        categories = categoriesFromCache,
-                        isLoaded = true
-                    )
-                )
-            }
+            updateUi(categoriesFromCache)
 
             val networkCategories = repository.getCategories()
 
             if (networkCategories != null) {
                 repository.saveCategoriesToCache(networkCategories)
-
-                _uiState.postValue(
-                    _uiState.value?.copy(
-                        categories = networkCategories,
-                        isLoaded = true
-                    )
-                )
+                updateUi(networkCategories)
             } else {
                 if (categoriesFromCache.isEmpty()) {
                     _errorEvent.postValue(R.string.networkError)
                 }
             }
         }
+    }
+
+    private fun updateUi(categories: List<Category>) {
+        _uiState.postValue(
+            _uiState.value?.copy(
+                categories = categories,
+                isLoaded = true
+            )
+        )
     }
 }

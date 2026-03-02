@@ -11,6 +11,7 @@ import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
+import ru.vysokov.recipesapp.model.Recipe
 
 data class RecipeUiState(
     val title: String = "",
@@ -37,21 +38,37 @@ class RecipeViewModel(
     fun loadRecipe(recipeId: Int) {
 
         viewModelScope.launch {
-            val recipe = repository.getRecipeById(recipeId)
+            val recipeFromCache = repository.getRecipeFromCache(recipeId)
 
-            if (recipe == null) _errorEvent.postValue(R.string.networkError)
-            else _uiState.postValue(
-                _uiState.value?.copy(
-                    title = recipe.title,
-                    recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
-                    isFavorite = recipeId.toString() in getFavorites(),
-                    ingredients = recipe.ingredients,
-                    method = recipe.method,
-                    portionsCount = _uiState.value?.portionsCount ?: 1,
-                    isLoaded = true
-                )
-            )
+            recipeFromCache?.let {
+                updateUi(recipeFromCache)
+            }
+
+            val networkRecipe = repository.getRecipeById(recipeId)
+
+            if (networkRecipe != null) {
+                repository.saveRecipeToCache(networkRecipe, null)
+                updateUi(networkRecipe)
+            } else {
+                if (recipeFromCache == null) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
+            }
         }
+    }
+
+    private fun updateUi(recipe: Recipe) {
+        _uiState.postValue(
+            _uiState.value?.copy(
+                title = recipe.title,
+                recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
+                isFavorite = recipe.toString() in getFavorites(),
+                ingredients = recipe.ingredients,
+                method = recipe.method,
+                portionsCount = _uiState.value?.portionsCount ?: 1,
+                isLoaded = true
+            )
+        )
     }
 
     fun onFavoritesClicked(recipeId: Int?) {

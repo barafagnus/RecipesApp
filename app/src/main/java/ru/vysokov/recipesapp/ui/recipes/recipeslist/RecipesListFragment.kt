@@ -38,7 +38,11 @@ class RecipesListFragment : Fragment() {
 
     private val viewModel: RecipesListViewModel by viewModels {
         RecipesListViewModelFactory(
-            RecipesRepository(NetworkClient.recipesService, databaseClient.categoryDao())
+            RecipesRepository(
+                NetworkClient.recipesService,
+                databaseClient.categoryDao(),
+                databaseClient.recipesDao()
+            )
         )
     }
     lateinit var recipesListAdapter: RecipesListAdapter
