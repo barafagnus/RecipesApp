@@ -22,4 +22,10 @@ interface RecipeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipe(recipe: RecipeEntity)
+
+    @Query("SELECT * FROM recipes WHERE is_favorite = 1")
+    suspend fun getFavorites(): List<RecipeEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavorites(recipes: List<RecipeEntity>)
 }

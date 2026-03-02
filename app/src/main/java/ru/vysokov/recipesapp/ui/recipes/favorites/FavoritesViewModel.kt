@@ -30,17 +30,31 @@ class FavoritesViewModel(
     // TODO: load from network
     fun loadFavorites() {
         val recipeIds = getFavoritesRecipeIds()
-        viewModelScope.launch {
-            val recipes = repository.getRecipesByIds(recipeIds)
 
-            if (recipes == null) _errorEvent.postValue(R.string.networkError)
-            else _uiState.postValue(
-                _uiState.value?.copy(
-                    favoriteRecipes = recipes,
-                    isLoaded = true
-                )
-            )
+        viewModelScope.launch {
+            val prefsFavoritesRecipes = repository.getRecipesByIds(recipeIds)
+            val favoritesFromCache = repository.getFavoritesFromCache()
+            updateUi(favoritesFromCache)
+
+            if (prefsFavoritesRecipes != null) {
+                repository.saveFavoritesToCache(prefsFavoritesRecipes)
+                updateUi(prefsFavoritesRecipes)
+            }
+            else {
+                if (favoritesFromCache.isEmpty()) {
+                    _errorEvent.postValue(R.string.networkError)
+                }
+            }
         }
+    }
+
+    private fun updateUi(recipes: List<Recipe>) {
+        _uiState.postValue(
+            _uiState.value?.copy(
+                favoriteRecipes = recipes,
+                isLoaded = true
+            )
+        )
     }
 
     fun getFavoritesRecipeIds(): Set<Int> =

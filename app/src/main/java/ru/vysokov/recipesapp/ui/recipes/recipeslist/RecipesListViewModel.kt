@@ -31,7 +31,7 @@ class RecipesListViewModel(
             val networkRecipes = repository.getRecipesByCategory(categoryId)
 
             if (networkRecipes != null) {
-                repository.saveRecipesToCache(networkRecipes, categoryId)
+                repository.saveRecipesToCache(networkRecipes, categoryId, true)
                 updateUi(networkRecipes)
             } else {
                 if (recipesFromCache.isEmpty()) {
