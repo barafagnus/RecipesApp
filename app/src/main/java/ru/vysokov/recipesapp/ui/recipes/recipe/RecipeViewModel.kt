@@ -11,6 +11,7 @@ import ru.vysokov.recipesapp.data.network.NetworkClient
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
+import ru.vysokov.recipesapp.model.Recipe
 
 data class RecipeUiState(
     val title: String = "",
@@ -40,41 +41,34 @@ class RecipeViewModel(
             val recipeFromCache = repository.getRecipeFromCache(recipeId)
 
             recipeFromCache?.let {
-                _uiState.postValue(
-                    _uiState.value?.copy(
-                        title = recipeFromCache.title,
-                        recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipeFromCache.imageUrl}",
-                        isFavorite = recipeId.toString() in getFavorites(),
-                        ingredients = recipeFromCache.ingredients,
-                        method = recipeFromCache.method,
-                        portionsCount = _uiState.value?.portionsCount ?: 1,
-                        isLoaded = true
-                    )
-                )
+                updateUi(recipeFromCache)
             }
 
             val networkRecipe = repository.getRecipeById(recipeId)
 
             if (networkRecipe != null) {
-                repository.saveRecipeToCache(networkRecipe)
-
-                _uiState.postValue(
-                    _uiState.value?.copy(
-                        title = networkRecipe.title,
-                        recipeImageUrl = "${NetworkClient.URL_IMAGES}${networkRecipe.imageUrl}",
-                        isFavorite = recipeId.toString() in getFavorites(),
-                        ingredients = networkRecipe.ingredients,
-                        method = networkRecipe.method,
-                        portionsCount = _uiState.value?.portionsCount ?: 1,
-                        isLoaded = true
-                    )
-                )
+                repository.saveRecipeToCache(networkRecipe, null)
+                updateUi(networkRecipe)
             } else {
                 if (recipeFromCache == null) {
                     _errorEvent.postValue(R.string.networkError)
                 }
             }
         }
+    }
+
+    private fun updateUi(recipe: Recipe) {
+        _uiState.postValue(
+            _uiState.value?.copy(
+                title = recipe.title,
+                recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
+                isFavorite = recipe.toString() in getFavorites(),
+                ingredients = recipe.ingredients,
+                method = recipe.method,
+                portionsCount = _uiState.value?.portionsCount ?: 1,
+                isLoaded = true
+            )
+        )
     }
 
     fun onFavoritesClicked(recipeId: Int?) {
