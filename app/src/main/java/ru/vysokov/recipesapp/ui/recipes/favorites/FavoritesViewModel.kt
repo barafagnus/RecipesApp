@@ -27,7 +27,6 @@ class FavoritesViewModel(
     private val _errorEvent = MutableLiveData<Int>()
     val errorEvent: LiveData<Int> get() = _errorEvent
 
-    // TODO: load from network
     fun loadFavorites() {
         val recipeIds = getFavoritesRecipeIds()
 

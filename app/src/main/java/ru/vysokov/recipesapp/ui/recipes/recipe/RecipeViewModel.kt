@@ -34,9 +34,7 @@ class RecipeViewModel(
     private val _errorEvent = MutableLiveData<Int>()
     val errorEvent: LiveData<Int> get() = _errorEvent
 
-    // TODO: load from network
     fun loadRecipe(recipeId: Int) {
-
         viewModelScope.launch {
             val recipeFromCache = repository.getRecipeFromCache(recipeId)
 

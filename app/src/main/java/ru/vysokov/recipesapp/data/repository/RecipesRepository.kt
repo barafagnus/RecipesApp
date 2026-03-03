@@ -36,13 +36,15 @@ class RecipesRepository(
     }
 
     suspend fun getRecipeFromCache(recipeId: Int): Recipe? {
-        val entity = recipeDao.getRecipeById(recipeId)
-        return entity?.toModel()
+        return withContext(Dispatchers.IO) {
+            recipeDao.getRecipeById(recipeId)?.toModel()
+        }
     }
 
     suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?, isFavorite: Boolean?) {
-        recipeDao.insertRecipe(recipe.toEntity(categoryId, isFavorite))
-
+        return withContext(Dispatchers.IO) {
+            recipeDao.insertRecipe(recipe.toEntity(categoryId, isFavorite))
+        }
     }
 
     suspend fun getCategoriesFromCache(): List<Category> {
@@ -66,7 +68,9 @@ class RecipesRepository(
     }
 
     suspend fun saveFavoritesToCache(recipes: List<Recipe>) {
-        recipeDao.insertFavorites(recipes.map { it.toEntity(null, true) })
+        return withContext(Dispatchers.IO) {
+            recipeDao.insertFavorites(recipes.map { it.toEntity(null, true) })
+        }
     }
 
     suspend fun getRecipeById(recipeId: Int): Recipe? {
