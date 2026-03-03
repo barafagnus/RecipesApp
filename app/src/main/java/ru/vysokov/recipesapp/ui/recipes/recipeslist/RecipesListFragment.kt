@@ -6,26 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.local.DatabaseClient
+import ru.vysokov.recipesapp.RecipesApplication
 import ru.vysokov.recipesapp.data.network.NetworkClient
-import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
-
-class RecipesListViewModelFactory(
-    private val repository: RecipesRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return RecipesListViewModel(repository) as T
-    }
-}
 
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesListBinding? = null
@@ -34,19 +21,18 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImage: String? = null
-    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
 
-    private val viewModel: RecipesListViewModel by viewModels {
-        RecipesListViewModelFactory(
-            RecipesRepository(
-                NetworkClient.recipesService,
-                databaseClient.categoryDao(),
-                databaseClient.recipesDao()
-            )
-        )
-    }
+    private lateinit var viewModel: RecipesListViewModel
+
     lateinit var recipesListAdapter: RecipesListAdapter
     private val args: RecipesListFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.recipesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

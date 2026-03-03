@@ -1,9 +1,8 @@
 package ru.vysokov.recipesapp.ui.categories
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
@@ -16,9 +15,8 @@ data class CategoriesUiState(
 )
 
 class CategoriesListViewModel(
-    application: Application,
     private val repository: RecipesRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
     private val _uiState = MutableLiveData(CategoriesUiState())
     val uiState: LiveData<CategoriesUiState> get() = _uiState
 
