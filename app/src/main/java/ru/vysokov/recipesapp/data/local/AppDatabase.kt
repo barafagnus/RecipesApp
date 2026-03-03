@@ -8,7 +8,7 @@ import ru.vysokov.recipesapp.data.local.dao.RecipeDao
 import ru.vysokov.recipesapp.data.local.entities.CategoryEntity
 import ru.vysokov.recipesapp.data.local.entities.RecipeEntity
 
-@Database(entities = [CategoryEntity::class, RecipeEntity::class], version = 3)
+@Database(entities = [CategoryEntity::class, RecipeEntity::class], version = 4)
 
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

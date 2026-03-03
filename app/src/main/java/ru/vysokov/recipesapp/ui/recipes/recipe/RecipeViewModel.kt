@@ -34,9 +34,7 @@ class RecipeViewModel(
     private val _errorEvent = MutableLiveData<Int>()
     val errorEvent: LiveData<Int> get() = _errorEvent
 
-    // TODO: load from network
     fun loadRecipe(recipeId: Int) {
-
         viewModelScope.launch {
             val recipeFromCache = repository.getRecipeFromCache(recipeId)
 
@@ -47,7 +45,7 @@ class RecipeViewModel(
             val networkRecipe = repository.getRecipeById(recipeId)
 
             if (networkRecipe != null) {
-                repository.saveRecipeToCache(networkRecipe, null)
+                repository.saveRecipeToCache(networkRecipe, null, null)
                 updateUi(networkRecipe)
             } else {
                 if (recipeFromCache == null) {
@@ -62,7 +60,7 @@ class RecipeViewModel(
             _uiState.value?.copy(
                 title = recipe.title,
                 recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
-                isFavorite = recipe.toString() in getFavorites(),
+                isFavorite = recipe.id.toString() in getFavorites(),
                 ingredients = recipe.ingredients,
                 method = recipe.method,
                 portionsCount = _uiState.value?.portionsCount ?: 1,

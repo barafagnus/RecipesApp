@@ -25,29 +25,32 @@ class RecipesRepository(
 
     suspend fun getRecipesFromCacheByCategory(categoryId: Int?): List<Recipe> {
         return withContext(Dispatchers.IO) {
-            recipeDao.getRecipesByCategory(categoryId).map {it.toModel()}
+            recipeDao.getRecipesByCategory(categoryId).map { it.toModel() }
         }
     }
 
-    suspend fun saveRecipesToCache(recipes: List<Recipe>, categoryId: Int?) {
+    suspend fun saveRecipesToCache(recipes: List<Recipe>, categoryId: Int?, isFavorite: Boolean?) {
         return withContext(Dispatchers.IO) {
-            recipeDao.insertAllRecipes(recipes.map { it.toEntity(categoryId) })
+            recipeDao.insertAllRecipes(recipes.map { it.toEntity(categoryId, isFavorite) })
         }
     }
 
     suspend fun getRecipeFromCache(recipeId: Int): Recipe? {
-        val entity = recipeDao.getRecipeById(recipeId)
-        return entity?.toModel()
+        return withContext(Dispatchers.IO) {
+            recipeDao.getRecipeById(recipeId)?.toModel()
+        }
     }
 
-    suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?) {
-        recipeDao.insertRecipe(recipe.toEntity(categoryId))
-
+    suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?, isFavorite: Boolean?) {
+        return withContext(Dispatchers.IO) {
+            recipeDao.insertRecipe(recipe.toEntity(categoryId, isFavorite))
+        }
     }
 
     suspend fun getCategoriesFromCache(): List<Category> {
         return withContext(Dispatchers.IO) {
-            categoryDao.getAllCategories().map { it.toModel()
+            categoryDao.getAllCategories().map {
+                it.toModel()
             }
         }
     }
@@ -55,6 +58,18 @@ class RecipesRepository(
     suspend fun saveCategoriesToCache(categories: List<Category>) {
         return withContext(Dispatchers.IO) {
             categoryDao.insertAllCategories(categories.map { it.toEntity() })
+        }
+    }
+
+    suspend fun getFavoritesFromCache(): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipeDao.getFavorites().map { it.toModel() }
+        }
+    }
+
+    suspend fun saveFavoritesToCache(recipes: List<Recipe>) {
+        return withContext(Dispatchers.IO) {
+            recipeDao.insertFavorites(recipes.map { it.toEntity(null, true) })
         }
     }
 

@@ -13,7 +13,8 @@ data class RecipeEntity(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "ingredients") val ingredients: List<Ingredient>,
     @ColumnInfo(name = "method") val method: List<String>,
-    @ColumnInfo(name = "imageUrl") val imageUrl: String
+    @ColumnInfo(name = "image_url") val imageUrl: String,
+    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean?
 )
 
 fun RecipeEntity.toModel() = Recipe(
@@ -24,11 +25,12 @@ fun RecipeEntity.toModel() = Recipe(
     imageUrl = imageUrl,
 )
 
-fun Recipe.toEntity(categoryId: Int?) = RecipeEntity(
+fun Recipe.toEntity(categoryId: Int?, isFavorite: Boolean?) = RecipeEntity(
     id = id,
     categoryId = categoryId,
     title = title,
     ingredients = ingredients,
     method = method,
-    imageUrl = imageUrl
+    imageUrl = imageUrl,
+    isFavorite = isFavorite
 )
