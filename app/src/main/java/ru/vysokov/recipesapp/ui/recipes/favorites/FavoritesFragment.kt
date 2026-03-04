@@ -1,48 +1,28 @@
 package ru.vysokov.recipesapp.ui.recipes.favorites
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import ru.vysokov.recipesapp.data.local.DatabaseClient
-import ru.vysokov.recipesapp.data.network.NetworkClient
-import ru.vysokov.recipesapp.data.repository.RecipesRepository
+import ru.vysokov.recipesapp.RecipesApplication
 import ru.vysokov.recipesapp.databinding.FragmentFavoritesBinding
 import ru.vysokov.recipesapp.ui.recipes.recipeslist.RecipesListAdapter
-
-class FavoritesFragmentViewModelFactory(
-    private val repository: RecipesRepository,
-    private val application: Application
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return FavoritesViewModel(repository, application) as T
-    }
-}
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException()
     private lateinit var recipesListAdapter: RecipesListAdapter
-    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
+    private lateinit var viewModel: FavoritesViewModel
 
-    private val viewModel: FavoritesViewModel by viewModels {
-        FavoritesFragmentViewModelFactory(
-            RecipesRepository(
-                NetworkClient.recipesService,
-                databaseClient.categoryDao(),
-                databaseClient.recipesDao()
-            ),
-            requireActivity().application
-        )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.favoritesViewModelFactory.create()
     }
 
     override fun onCreateView(

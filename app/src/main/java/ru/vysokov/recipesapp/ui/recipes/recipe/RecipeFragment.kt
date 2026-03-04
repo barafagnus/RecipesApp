@@ -1,6 +1,5 @@
 package ru.vysokov.recipesapp.ui.recipes.recipe
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,28 +8,13 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.local.DatabaseClient
-import ru.vysokov.recipesapp.data.network.NetworkClient
-import ru.vysokov.recipesapp.data.repository.RecipesRepository
+import ru.vysokov.recipesapp.RecipesApplication
 import ru.vysokov.recipesapp.databinding.FragmentRecipeBinding
-
-class RecipeFragmentViewModelFactory(
-    private val repository: RecipesRepository,
-    private val application: Application
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return RecipeViewModel(repository, application) as T
-    }
-}
 
 class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
@@ -40,16 +24,14 @@ class RecipeFragment : Fragment() {
     private lateinit var methodAdapter: MethodAdapter
     private var isInitUi = false
     private val args: RecipeFragmentArgs by navArgs()
-    private val databaseClient by lazy { DatabaseClient.getInstance(requireContext()) }
 
-    private val viewModel: RecipeViewModel by viewModels {
-        RecipeFragmentViewModelFactory(
-            RecipesRepository(
-                NetworkClient.recipesService,
-                databaseClient.categoryDao(),
-                databaseClient.recipesDao()),
-            requireActivity().application
-        )
+    private lateinit var viewModel: RecipeViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.recipeViewModelFactory.create()
     }
 
     override fun onCreateView(
