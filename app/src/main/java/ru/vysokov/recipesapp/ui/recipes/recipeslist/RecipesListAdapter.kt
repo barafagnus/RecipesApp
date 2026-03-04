@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.core.Network
 import ru.vysokov.recipesapp.databinding.ItemRecipeBinding
 import ru.vysokov.recipesapp.model.Recipe
 
@@ -44,7 +44,7 @@ class RecipesListAdapter(dataSet: List<Recipe>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val recipe = dataSet[position]
-        val imageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}"
+        val imageUrl = "${Network.URL_IMAGES}${recipe.imageUrl}"
 
         Glide.with(viewHolder.itemView.context)
             .load(imageUrl)

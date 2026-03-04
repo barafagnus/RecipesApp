@@ -10,9 +10,10 @@ import ru.vysokov.recipesapp.data.local.entities.toModel
 import ru.vysokov.recipesapp.data.network.RecipeApiService
 import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val apiService: RecipeApiService,
     private val categoryDao: CategoryDao,
     private val recipeDao: RecipeDao

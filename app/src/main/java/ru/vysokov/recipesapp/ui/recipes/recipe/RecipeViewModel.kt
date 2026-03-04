@@ -5,13 +5,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.core.Network
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 data class RecipeUiState(
     val title: String = "",
@@ -23,7 +25,8 @@ data class RecipeUiState(
     val isLoaded: Boolean = false
 )
 
-class RecipeViewModel(
+@HiltViewModel
+class RecipeViewModel @Inject constructor(
     private val repository: RecipesRepository,
     application: Application
 ) : AndroidViewModel(application) {
@@ -59,7 +62,7 @@ class RecipeViewModel(
         _uiState.postValue(
             _uiState.value?.copy(
                 title = recipe.title,
-                recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
+                recipeImageUrl = "${Network.URL_IMAGES}${recipe.imageUrl}",
                 isFavorite = recipe.id.toString() in getFavorites(),
                 ingredients = recipe.ingredients,
                 method = recipe.method,

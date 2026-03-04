@@ -5,18 +5,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 data class FavoritesUiState(
     val favoriteRecipes: List<Recipe> = emptyList(),
     val isLoaded: Boolean = false
 )
 
-class FavoritesViewModel(
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
     private val repository: RecipesRepository,
     application: Application
 ) : AndroidViewModel(application) {
@@ -38,8 +41,7 @@ class FavoritesViewModel(
             if (prefsFavoritesRecipes != null) {
                 repository.saveFavoritesToCache(prefsFavoritesRecipes)
                 updateUi(prefsFavoritesRecipes)
-            }
-            else {
+            } else {
                 if (favoritesFromCache.isEmpty()) {
                     _errorEvent.postValue(R.string.networkError)
                 }
