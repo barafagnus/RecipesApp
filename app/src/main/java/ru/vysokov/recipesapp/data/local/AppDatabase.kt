@@ -10,7 +10,7 @@ import ru.vysokov.recipesapp.data.local.entities.RecipeEntity
 
 @Database(
     entities = [CategoryEntity::class, RecipeEntity::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 

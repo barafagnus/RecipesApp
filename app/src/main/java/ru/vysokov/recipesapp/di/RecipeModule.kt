@@ -18,12 +18,14 @@ import ru.vysokov.recipesapp.data.local.DatabaseClient
 import ru.vysokov.recipesapp.data.local.dao.CategoryDao
 import ru.vysokov.recipesapp.data.local.dao.RecipeDao
 import ru.vysokov.recipesapp.data.network.RecipeApiService
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RecipeModule() {
+object RecipeModule {
 
     @Provides
+    @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -31,6 +33,7 @@ class RecipeModule() {
         .build()
 
     @Provides
+    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         val json = Json { ignoreUnknownKeys = true }
         val contentType = "application/json".toMediaType()
@@ -43,11 +46,13 @@ class RecipeModule() {
     }
 
     @Provides
+    @Singleton
     fun provideRecipeApiService(retrofit: Retrofit): RecipeApiService {
         return retrofit.create(RecipeApiService::class.java)
     }
 
     @Provides
+    @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         DatabaseClient.getInstance(context)
 

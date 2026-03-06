@@ -127,8 +127,8 @@ class RecipeFragment : Fragment() {
         }
     }
 
-    private fun updateFavoriteIcon(isFavorite: Boolean) {
-        val iconRes = if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty
+    private fun updateFavoriteIcon(isFavorite: Boolean?) {
+        val iconRes = if (isFavorite == true) R.drawable.ic_heart else R.drawable.ic_heart_empty
         binding.ibToFavorites.setImageDrawable(
             ContextCompat.getDrawable(requireContext(), iconRes)
         )
