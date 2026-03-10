@@ -5,13 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.core.Network
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
-import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Ingredient
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 data class RecipeUiState(
     val title: String = "",
@@ -23,13 +24,13 @@ data class RecipeUiState(
     val isLoaded: Boolean = false
 )
 
-class RecipeViewModel(
+@HiltViewModel
+class RecipeViewModel @Inject constructor(
     private val repository: RecipesRepository,
     application: Application
 ) : AndroidViewModel(application) {
     private val _uiState = MutableLiveData(RecipeUiState())
     val uiState: LiveData<RecipeUiState> get() = _uiState
-    private val context = getApplication<Application>()
 
     private val _errorEvent = MutableLiveData<Int>()
     val errorEvent: LiveData<Int> get() = _errorEvent
@@ -39,14 +40,16 @@ class RecipeViewModel(
             val recipeFromCache = repository.getRecipeFromCache(recipeId)
 
             recipeFromCache?.let {
-                updateUi(recipeFromCache)
+                updateUi(recipeFromCache, repository.isFavorite(recipeId) ?: false)
             }
 
             val networkRecipe = repository.getRecipeById(recipeId)
 
             if (networkRecipe != null) {
-                repository.saveRecipeToCache(networkRecipe, null, null)
-                updateUi(networkRecipe)
+                repository.saveRecipeToCache(
+                    networkRecipe, null
+                )
+                updateUi(networkRecipe, repository.isFavorite(recipeId) ?: false)
             } else {
                 if (recipeFromCache == null) {
                     _errorEvent.postValue(R.string.networkError)
@@ -55,13 +58,13 @@ class RecipeViewModel(
         }
     }
 
-    private fun updateUi(recipe: Recipe) {
+    private fun updateUi(recipe: Recipe, isFavorite: Boolean) {
         _uiState.postValue(
             _uiState.value?.copy(
                 title = recipe.title,
-                recipeImageUrl = "${NetworkClient.URL_IMAGES}${recipe.imageUrl}",
-                isFavorite = recipe.id.toString() in getFavorites(),
+                recipeImageUrl = "${Network.URL_IMAGES}${recipe.imageUrl}",
                 ingredients = recipe.ingredients,
+                isFavorite = isFavorite,
                 method = recipe.method,
                 portionsCount = _uiState.value?.portionsCount ?: 1,
                 isLoaded = true
@@ -70,21 +73,16 @@ class RecipeViewModel(
     }
 
     fun onFavoritesClicked(recipeId: Int?) {
-        val favorites = getFavorites().toMutableSet()
+        viewModelScope.launch {
+            val currentStatus = repository.isFavorite(recipeId) ?: false
+            val newStatus = !currentStatus
 
-        val isFavorite = if (recipeId?.toString() in favorites) {
-            favorites.remove(recipeId.toString())
-            false
-        } else {
-            favorites.add(recipeId.toString())
-            true
+            repository.updateFavoriteInCache(recipeId, isFavorite = newStatus)
+
+            _uiState.value = _uiState.value?.copy(
+                isFavorite = newStatus
+            )
         }
-
-        saveFavorites(favorites)
-
-        _uiState.value = _uiState.value?.copy(
-            isFavorite = isFavorite
-        )
     }
 
     fun updatePortion(portionsCount: Int) {
@@ -93,11 +91,4 @@ class RecipeViewModel(
         )
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        return FavoritesManager.getFavorites(context.applicationContext)
-    }
-
-    private fun saveFavorites(favorites: Set<String>) {
-        FavoritesManager.saveFavorites(context.applicationContext, favorites)
-    }
 }

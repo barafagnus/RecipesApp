@@ -10,28 +10,27 @@ import ru.vysokov.recipesapp.data.local.entities.toModel
 import ru.vysokov.recipesapp.data.network.RecipeApiService
 import ru.vysokov.recipesapp.model.Category
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val apiService: RecipeApiService,
     private val categoryDao: CategoryDao,
     private val recipeDao: RecipeDao
 ) {
-    suspend fun getRecipesFromCache(): List<Recipe> {
-        return withContext(Dispatchers.IO) {
-            recipeDao.getAllRecipes().map { it.toModel() }
-        }
-    }
-
     suspend fun getRecipesFromCacheByCategory(categoryId: Int?): List<Recipe> {
         return withContext(Dispatchers.IO) {
             recipeDao.getRecipesByCategory(categoryId).map { it.toModel() }
         }
     }
 
-    suspend fun saveRecipesToCache(recipes: List<Recipe>, categoryId: Int?, isFavorite: Boolean?) {
+    suspend fun saveRecipesToCache(recipes: List<Recipe>, categoryId: Int?) {
         return withContext(Dispatchers.IO) {
-            recipeDao.insertAllRecipes(recipes.map { it.toEntity(categoryId, isFavorite) })
+            recipeDao.insertAllRecipes(recipes.map { recipe ->
+                val isFavorite = recipeDao.isFavorite(recipe.id) ?: false
+                val finalCategoryId = categoryId ?: recipeDao.getCategoryById(recipe.id)
+                recipe.toEntity(finalCategoryId, isFavorite)
+            })
         }
     }
 
@@ -41,9 +40,17 @@ class RecipesRepository(
         }
     }
 
-    suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?, isFavorite: Boolean?) {
+    suspend fun isFavorite(recipeId: Int?): Boolean? {
         return withContext(Dispatchers.IO) {
-            recipeDao.insertRecipe(recipe.toEntity(categoryId, isFavorite))
+            recipeDao.isFavorite(recipeId)
+        }
+    }
+
+    suspend fun saveRecipeToCache(recipe: Recipe, categoryId: Int?) {
+        return withContext(Dispatchers.IO) {
+            val isFavorite = recipeDao.isFavorite(recipe.id) ?: false
+            val finalCategoryId = categoryId ?: recipeDao.getCategoryById(recipe.id)
+            recipeDao.insertRecipe(recipe.toEntity(finalCategoryId, isFavorite))
         }
     }
 
@@ -67,9 +74,9 @@ class RecipesRepository(
         }
     }
 
-    suspend fun saveFavoritesToCache(recipes: List<Recipe>) {
+    suspend fun updateFavoriteInCache(recipeId: Int?, isFavorite: Boolean) {
         return withContext(Dispatchers.IO) {
-            recipeDao.insertFavorites(recipes.map { it.toEntity(null, true) })
+            recipeDao.updateFavoriteStatus(recipeId, isFavorite)
         }
     }
 
@@ -80,31 +87,6 @@ class RecipesRepository(
                 response.body()
             } catch (e: Exception) {
                 Log.e("!!!", "Network error on get recipe by id")
-                null
-            }
-        }
-    }
-
-    suspend fun getRecipesByIds(recipesIds: Set<Int>): List<Recipe>? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = apiService.getRecipesById(recipesIds.joinToString(",")).execute()
-                response.body()
-            } catch (e: Exception) {
-                Log.e("!!!", "Network error on get recipes list")
-                null
-            }
-        }
-
-    }
-
-    suspend fun getCategory(categoryId: Int): Category? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = apiService.getCategory(categoryId).execute()
-                response.body()
-            } catch (e: Exception) {
-                Log.e("!!!", "Network error on get category")
                 null
             }
         }

@@ -4,17 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
 import ru.vysokov.recipesapp.model.Category
+import javax.inject.Inject
 
-data class CategoriesUiState(
+data class CategoriesUiState (
     val categories: List<Category> = emptyList(),
     val isLoaded: Boolean = false,
 )
 
-class CategoriesListViewModel(
+@HiltViewModel
+class CategoriesListViewModel @Inject constructor(
     private val repository: RecipesRepository
 ) : ViewModel() {
     private val _uiState = MutableLiveData(CategoriesUiState())

@@ -1,48 +1,38 @@
 package ru.vysokov.recipesapp.ui.recipes.favorites
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vysokov.recipesapp.R
 import ru.vysokov.recipesapp.data.repository.RecipesRepository
-import ru.vysokov.recipesapp.data.utils.FavoritesManager
 import ru.vysokov.recipesapp.model.Recipe
+import javax.inject.Inject
 
 data class FavoritesUiState(
     val favoriteRecipes: List<Recipe> = emptyList(),
     val isLoaded: Boolean = false
 )
 
-class FavoritesViewModel(
-    private val repository: RecipesRepository,
-    application: Application
-) : AndroidViewModel(application) {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    private val repository: RecipesRepository
+) : ViewModel() {
     private val _uiState = MutableLiveData(FavoritesUiState())
     val uiState: LiveData<FavoritesUiState> get() = _uiState
-    private val context = getApplication<Application>()
 
     private val _errorEvent = MutableLiveData<Int>()
     val errorEvent: LiveData<Int> get() = _errorEvent
 
     fun loadFavorites() {
-        val recipeIds = getFavoritesRecipeIds()
-
         viewModelScope.launch {
-            val prefsFavoritesRecipes = repository.getRecipesByIds(recipeIds)
-            val favoritesFromCache = repository.getFavoritesFromCache()
-            updateUi(favoritesFromCache)
-
-            if (prefsFavoritesRecipes != null) {
-                repository.saveFavoritesToCache(prefsFavoritesRecipes)
-                updateUi(prefsFavoritesRecipes)
-            }
-            else {
-                if (favoritesFromCache.isEmpty()) {
-                    _errorEvent.postValue(R.string.networkError)
-                }
+            try {
+                val favoritesFromCache = repository.getFavoritesFromCache()
+                updateUi(favoritesFromCache)
+            } catch (e: Exception) {
+                _errorEvent.postValue(R.string.networkError)
             }
         }
     }
@@ -55,7 +45,4 @@ class FavoritesViewModel(
             )
         )
     }
-
-    fun getFavoritesRecipeIds(): Set<Int> =
-        FavoritesManager.getFavorites(context.applicationContext).map { it.toInt() }.toSet()
 }

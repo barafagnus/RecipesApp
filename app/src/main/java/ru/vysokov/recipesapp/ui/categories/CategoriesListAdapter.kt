@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.core.Network
 import ru.vysokov.recipesapp.databinding.ItemCategoryBinding
 import ru.vysokov.recipesapp.model.Category
 
@@ -47,7 +47,7 @@ class CategoriesListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val category = dataSet[position]
-        val imageUrl = "${NetworkClient.URL_IMAGES}${category.imageUrl}"
+        val imageUrl = "${Network.URL_IMAGES}${category.imageUrl}"
 
         Glide.with(viewHolder.itemView.context)
             .load(imageUrl)

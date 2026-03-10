@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import ru.vysokov.recipesapp.R
-import ru.vysokov.recipesapp.RecipesApplication
-import ru.vysokov.recipesapp.data.network.NetworkClient
+import ru.vysokov.recipesapp.core.Network
 import ru.vysokov.recipesapp.databinding.FragmentRecipesListBinding
 
+@AndroidEntryPoint
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesListBinding? = null
     private val binding
@@ -21,18 +23,9 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImage: String? = null
-
-    private lateinit var viewModel: RecipesListViewModel
-
+    private val viewModel: RecipesListViewModel by viewModels()
     lateinit var recipesListAdapter: RecipesListAdapter
     private val args: RecipesListFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        viewModel = appContainer.recipesListViewModelFactory.create()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +42,7 @@ class RecipesListFragment : Fragment() {
         categoryId = args.category?.id
         categoryName = args.category?.title
         categoryImage = args.category?.imageUrl
-        val imageUrl = "${NetworkClient.URL_IMAGES}${categoryImage}"
+        val imageUrl = "${Network.URL_IMAGES}${categoryImage}"
 
         Glide.with(requireContext())
             .load(imageUrl)
